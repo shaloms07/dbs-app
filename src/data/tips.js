@@ -2,55 +2,48 @@ export const TIPS = [
   {
     id: 'tip-001',
     icon: '🚦',
-    title: 'Follow Traffic Signals',
+    title: 'Respect traffic signals',
     description:
-      'Stop at red lights. Signal jumping is a serious violation that heavily impacts your score.',
-    category: 'signals',
-    priority: 1,
+      'Stopping at signals consistently prevents high-impact deductions and keeps your record clean.',
+    category: 'signal',
   },
   {
     id: 'tip-002',
     icon: '🪖',
-    title: 'Wear Your Helmet',
+    title: 'Wear your helmet every ride',
     description:
-      'Always wear an approved helmet while riding. This is both a legal requirement and your safety.',
-    category: 'safety',
-    priority: 1,
+      'Helmet violations hit your score and your safety at the same time. Make it automatic.',
+    category: 'helmet',
   },
   {
     id: 'tip-003',
     icon: '📵',
-    title: 'Avoid Phone While Driving',
+    title: 'Keep your phone away while driving',
     description:
-      'Never use your mobile phone while driving. It is illegal and extremely dangerous.',
+      'Phone usage is easy to avoid and often leads to avoidable challans. Use navigation audio instead.',
     category: 'phone',
-    priority: 1,
   },
   {
     id: 'tip-004',
     icon: '⚡',
-    title: 'Maintain Speed Limits',
+    title: 'Stay within speed limits',
     description:
-      'Follow the prescribed speed limits for different road types. Speed violations are heavily penalized.',
+      'Speeding violations usually carry heavier penalties. Build in a buffer and leave earlier.',
     category: 'speed',
-    priority: 2,
   },
   {
     id: 'tip-005',
-    icon: '🪑',
-    title: 'Fasten Your Seatbelt',
-    description:
-      'Always wear your seatbelt. For passengers, ensure everyone is belted in properly.',
-    category: 'safety',
-    priority: 2,
+    icon: '🔒',
+    title: 'Buckle up before moving',
+    description: 'Seatbelts are one of the simplest ways to avoid repeat low-value deductions.',
+    category: 'seatbelt',
   },
   {
     id: 'tip-006',
-    icon: '🛣️',
-    title: 'Stay in Your Lane',
+    icon: '🛣',
+    title: 'Practice lane discipline',
     description:
-      'Maintain lane discipline. Lane weaving and sudden changes are dangerous and  penalized.',
-    category: 'discipline',
-    priority: 3,
+      'Predictable lane behavior reduces risky maneuvers and keeps your driving pattern steady.',
+    category: 'other',
   },
 ];

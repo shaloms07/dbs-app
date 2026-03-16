@@ -45,6 +45,13 @@ export default {
       },
       animation: {
         pulse: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        slideUp: 'slideUp 0.3s ease-out',
+      },
+      keyframes: {
+        slideUp: {
+          'from': { transform: 'translateY(100%)' },
+          'to': { transform: 'translateY(0)' },
+        },
       },
     },
   },

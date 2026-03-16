@@ -1,67 +1,60 @@
-// Score constants
 export const SCORE_MAX = 900;
 export const SCORE_MIN = 0;
 
-// Score bands with colors
 export const SCORE_BANDS = [
   {
     min: 0,
-    max: 300,
+    max: 299,
     label: 'Poor',
     color: '#ef4444',
-    tailwind: 'text-score-poor',
+    tailwind: 'text-red-500',
     bgTailwind: 'bg-red-50',
   },
   {
-    min: 301,
-    max: 450,
+    min: 300,
+    max: 499,
     label: 'Below Average',
     color: '#f97316',
-    tailwind: 'text-score-below',
+    tailwind: 'text-orange-500',
     bgTailwind: 'bg-orange-50',
   },
   {
-    min: 451,
-    max: 600,
+    min: 500,
+    max: 649,
     label: 'Average',
     color: '#eab308',
-    tailwind: 'text-score-average',
-    bgTailwind: 'bg-yellow-50',
+    tailwind: 'text-amber-500',
+    bgTailwind: 'bg-amber-50',
   },
   {
-    min: 601,
-    max: 750,
+    min: 650,
+    max: 799,
     label: 'Good',
     color: '#3b82f6',
-    tailwind: 'text-score-good',
+    tailwind: 'text-blue-500',
     bgTailwind: 'bg-blue-50',
   },
   {
-    min: 751,
+    min: 800,
     max: 900,
     label: 'Excellent',
     color: '#10b981',
-    tailwind: 'text-score-excellent',
+    tailwind: 'text-green-600',
     bgTailwind: 'bg-green-50',
   },
 ];
 
-// Get band for a score
 export function getBand(score) {
-  const band = SCORE_BANDS.find((b) => score >= b.min && score <= b.max);
-  return band || SCORE_BANDS[0]; // Default to Poor if not found
+  return SCORE_BANDS.find((band) => score >= band.min && score <= band.max) ?? SCORE_BANDS[0];
 }
 
-// Convert score to angle (0-180 degrees for semicircle)
 export function scoreToAngle(score) {
-  const percentage = (score / SCORE_MAX) * 100;
-  return (percentage / 100) * 180;
+  const clamped = Math.max(SCORE_MIN, Math.min(score, SCORE_MAX));
+  return -90 + (clamped / SCORE_MAX) * 180;
 }
 
-// Convert score to SVG stroke-dashoffset for gauge animation
-// Arc length = 371 for the gauge path
 export function scoreToStrokeDashOffset(score) {
-  const percentage = (score / SCORE_MAX) * 100;
-  const offset = 371 - (percentage / 100) * 371;
-  return offset;
+  const arcLength = 371;
+  const clamped = Math.max(SCORE_MIN, Math.min(score, SCORE_MAX));
+  return arcLength - (clamped / SCORE_MAX) * arcLength;
 }

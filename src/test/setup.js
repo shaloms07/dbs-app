@@ -1,1 +1,1 @@
-import '@testing-library/jest-dom'
+// Reserved for future component-test setup.

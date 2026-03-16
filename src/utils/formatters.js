@@ -1,63 +1,48 @@
-// Format currency in Indian Rupees
 export function formatINR(amount) {
   return new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency: 'INR',
+    maximumFractionDigits: 0,
   }).format(amount);
 }
 
-// Format date in Indian format
 export function formatDateIN(date) {
-  const options = { year: 'numeric', month: 'short', day: 'numeric' };
-  return new Intl.DateTimeFormat('en-IN', options).format(new Date(date));
+  return new Intl.DateTimeFormat('en-IN', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  }).format(new Date(date));
 }
 
-// Get personalized greeting based on time of day
 export function getGreeting() {
   const hour = new Date().getHours();
   if (hour < 12) return 'Good morning';
-  if (hour < 18) return 'Good afternoon';
+  if (hour < 17) return 'Good afternoon';
   return 'Good evening';
 }
 
-// Mask sensitive string (e.g., "UP32AB****1234")
 export function maskString(str, visibleStart = 6, visibleEnd = 4) {
-  if (!str || str.length <= visibleStart + visibleEnd) return str;
-  const start = str.slice(0, visibleStart);
-  const end = str.slice(-visibleEnd);
-  const masked = '*'.repeat(str.length - visibleStart - visibleEnd);
-  return start + masked + end;
+  if (str == null) return str;
+  if (str.length <= visibleStart + visibleEnd) return str;
+  return `${str.slice(0, visibleStart)}${'*'.repeat(str.length - visibleStart - visibleEnd)}${str.slice(-visibleEnd)}`;
 }
 
-// Calculate days until target date
 export function daysUntil(targetDate) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const target = new Date(targetDate);
   target.setHours(0, 0, 0, 0);
-  const diffTime = target - today;
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  return diffDays;
+  return Math.ceil((target - today) / (1000 * 60 * 60 * 24));
 }
 
-// Format time ago (e.g., "2 hours ago", "Just now")
 export function timeAgo(date) {
-  const seconds = Math.floor((new Date() - new Date(date)) / 1000);
-
-  let interval = seconds / 31536000;
-  if (interval > 1) return Math.floor(interval) + ' years ago';
-
-  interval = seconds / 2592000;
-  if (interval > 1) return Math.floor(interval) + ' months ago';
-
-  interval = seconds / 86400;
-  if (interval > 1) return Math.floor(interval) + ' days ago';
-
-  interval = seconds / 3600;
-  if (interval > 1) return Math.floor(interval) + ' hours ago';
-
-  interval = seconds / 60;
-  if (interval > 1) return Math.floor(interval) + ' minutes ago';
-
-  return 'Just now';
+  const seconds = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
+  if (seconds < 60) return 'Just now';
+  if (seconds < 3600) return `${Math.floor(seconds / 60)} minute${seconds < 120 ? '' : 's'} ago`;
+  if (seconds < 86400) return `${Math.floor(seconds / 3600)} hour${seconds < 7200 ? '' : 's'} ago`;
+  if (seconds < 2592000)
+    return `${Math.floor(seconds / 86400)} day${seconds < 172800 ? '' : 's'} ago`;
+  if (seconds < 31536000)
+    return `${Math.floor(seconds / 2592000)} month${seconds < 5184000 ? '' : 's'} ago`;
+  return `${Math.floor(seconds / 31536000)} year${seconds < 63072000 ? '' : 's'} ago`;
 }

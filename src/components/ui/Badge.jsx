@@ -1,4 +1,6 @@
-export default function Badge({ children, color = 'grey', ...props }) {
+import PropTypes from 'prop-types';
+
+export default function Badge({ children, label, color = 'grey', className = '', ...props }) {
   const colorClasses = {
     green: 'bg-green-100 text-green-800',
     blue: 'bg-blue-100 text-blue-800',
@@ -9,10 +11,17 @@ export default function Badge({ children, color = 'grey', ...props }) {
 
   return (
     <span
-      className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold ${colorClasses[color]}`}
+      className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${colorClasses[color]} ${className}`}
       {...props}
     >
-      {children}
+      {children ?? label}
     </span>
   );
 }
+
+Badge.propTypes = {
+  children: PropTypes.node,
+  label: PropTypes.string,
+  color: PropTypes.oneOf(['green', 'blue', 'amber', 'red', 'grey']),
+  className: PropTypes.string,
+};

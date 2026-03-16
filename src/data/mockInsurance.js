@@ -1,83 +1,61 @@
 export const mockInsurance = {
-  currentPolicy: {
-    provider: 'ICICI Insurance',
-    policyNumber: 'POL123456789',
-    type: 'Third Party',
-    vehicleReg: 'UP32AB1234',
-    premium: 2450,
-    renewalDueDate: '2026-03-31',
-    daysUntilRenewal: 45,
+  vehicle: {
+    registrationNumber: 'UP32AB1234',
+    make: 'Maruti Suzuki',
+    cc: 1197,
+    fuelType: 'Petrol',
   },
-  dbsImpact: {
-    currentScore: 742,
-    band: 'Good',
-    currentLoading: 0, // 0% loading for Good band
-    discountInPercent: 5, // 5% discount for Good band
-    discountInAmount: 122.5, // 5% of 2450
+  policy: {
+    expiryDate: '2026-04-30',
   },
-  benchmarkPricing: {
-    poorBand: 3675, // 50% loading
-    belowAverage: 3234, // 32% loading
-    average: 2695, // 10% loading
-    good: 2450, // No loading (base price, or slight discount)
-    excellent: 2084, // 15% discount
+  pricing: {
+    standardTPPremium: 2450,
+    dbsAdjustedPremium: 2328,
+    loadingAmount: 0,
+    discountAmount: 122,
+    tpPremiumDiscount: 122,
   },
   insurers: [
     {
       id: 'insurer-001',
-      name: 'ICICI Insurance',
-      logo: 'icici-logo.png',
-      premiumForCurrentDBS: 2450,
-      discountPercent: 5,
-      coverageType: 'Third Party',
-      features: ['NCB Benefit', 'Cashless Claim', 'Online Renewal'],
+      name: 'ICICI Lombard',
+      logoUrl: '',
+      tpPremium: 2328,
+      odFromPremium: 4200,
+      dbsParticipating: true,
+      quoteUrl: 'https://example.com/quote/icici',
       rating: 4.5,
       reviews: 2840,
-      nclbBenefit: true,
+      features: ['Cashless claims', 'Fast renewal', '24x7 support'],
     },
     {
       id: 'insurer-002',
       name: 'Bajaj Allianz',
-      logo: 'bajaj-logo.png',
-      premiumForCurrentDBS: 2380,
-      discountPercent: 7,
-      coverageType: 'Third Party',
-      features: ['Accidental Benefit', 'Roadside Assistance', 'Fast Claim Processing'],
+      logoUrl: '',
+      tpPremium: 2380,
+      odFromPremium: 4100,
+      dbsParticipating: true,
+      quoteUrl: 'https://example.com/quote/bajaj',
       rating: 4.4,
       reviews: 3120,
-      nclbBenefit: true,
+      features: ['Roadside assistance', 'Paperless process', 'NCB support'],
     },
     {
       id: 'insurer-003',
-      name: 'Bharti AXA Insurance',
-      logo: 'bharti-axa-logo.png',
-      premiumForCurrentDBS: 2520,
-      discountPercent: 3,
-      coverageType: 'Third Party',
-      features: ['Hassle-Free Claim', 'Mobile App', 'Paperless Process'],
+      name: 'Bharti AXA',
+      logoUrl: '',
+      tpPremium: 2485,
+      odFromPremium: 4050,
+      dbsParticipating: false,
+      quoteUrl: 'https://example.com/quote/bharti',
       rating: 4.3,
       reviews: 1950,
-      nclbBenefit: false,
+      features: ['Mobile app', 'Quick support', 'Flexible add-ons'],
     },
   ],
   renewalHistory: [
-    {
-      year: 2024,
-      provider: 'ICICI Insurance',
-      premium: 2450,
-      band: 'Good',
-    },
-    {
-      year: 2023,
-      provider: 'Bajaj Allianz',
-      premium: 2680,
-      band: 'Average',
-    },
-    {
-      year: 2022,
-      provider: 'ICICI Insurance',
-      premium: 2900,
-      band: 'Below Average',
-    },
+    { year: 2025, provider: 'ICICI Lombard', premium: 2450, band: 'Good' },
+    { year: 2024, provider: 'Bajaj Allianz', premium: 2680, band: 'Average' },
+    { year: 2023, provider: 'ICICI Lombard', premium: 2900, band: 'Below Average' },
   ],
 };

@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { violationService } from '@services/violationService';
-import { CACHE_KEYS, CACHE_TTL, setCache, getCache } from '@utils/cache';
+import { CACHE_KEYS, CACHE_TTL, getCache, setCache } from '@utils/cache';
 
 export function useViolations(initialPage = 1, limit = 10) {
   const [violations, setViolations] = useState([]);
@@ -15,7 +15,6 @@ export function useViolations(initialPage = 1, limit = 10) {
       setLoading(true);
       setError(null);
 
-      // Check cache first
       const cacheKey = `${CACHE_KEYS.VIOLATIONS}_p${pageNum}`;
       const cached = getCache(cacheKey);
       if (cached && pageNum === 1) {
@@ -27,15 +26,11 @@ export function useViolations(initialPage = 1, limit = 10) {
         return;
       }
 
-      // Fetch from API/mock
       const data = await violationService.getViolations(pageNum, limit);
-
       setViolations(data.violations);
       setHasMore(data.hasMore);
       setTotal(data.total);
       setPage(pageNum);
-
-      // Cache for 6 hours
       setCache(cacheKey, data, CACHE_TTL.LONG);
     } catch (err) {
       setError(err.message || 'Failed to fetch violations');
@@ -46,24 +41,17 @@ export function useViolations(initialPage = 1, limit = 10) {
 
   useEffect(() => {
     fetchViolations(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const loadMore = () => {
-    if (hasMore) {
-      fetchViolations(page + 1);
-    }
-  };
-
-  const refetch = () => {
-    fetchViolations(1);
-  };
 
   return {
     violations,
     loading,
     error,
-    refetch,
-    loadMore,
+    refetch: () => fetchViolations(1),
+    loadMore: () => {
+      if (hasMore) fetchViolations(page + 1);
+    },
     hasMore,
     total,
     currentPage: page,

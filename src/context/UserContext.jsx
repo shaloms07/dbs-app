@@ -1,60 +1,66 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import {
-  isTokenValid,
   getToken,
   getUserFromStorage,
-  setUserInStorage,
-  removeUserFromStorage,
+  isTokenValid,
   removeToken,
+  removeUserFromStorage,
+  setUserInStorage,
 } from '@utils/auth';
 
 const UserContext = createContext();
 
 export function UserProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [user, setUserState] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Check auth on mount
   useEffect(() => {
     const token = getToken();
     const storedUser = getUserFromStorage();
 
     if (token && isTokenValid(token) && storedUser) {
-      setUser(storedUser);
+      setUserState(storedUser);
       setIsAuthenticated(true);
-      setLoading(false);
     } else {
-      // Token invalid or missing, clear storage
       removeToken();
       removeUserFromStorage();
-      setUser(null);
-      setIsAuthenticated(false);
-      setLoading(false);
     }
+
+    setLoading(false);
   }, []);
+
+  const setUser = (nextUser) => {
+    setUserState(nextUser);
+    if (nextUser) {
+      setUserInStorage(nextUser);
+      setIsAuthenticated(true);
+    } else {
+      removeUserFromStorage();
+      setIsAuthenticated(false);
+    }
+  };
 
   const logout = () => {
     removeToken();
     removeUserFromStorage();
-    setUser(null);
+    setUserState(null);
     setIsAuthenticated(false);
   };
 
-  const updateUser = (updatedUser) => {
-    setUser(updatedUser);
-    setUserInStorage(updatedUser);
-  };
-
-  const value = {
-    user,
-    setUser: updateUser,
-    isAuthenticated,
-    loading,
-    logout,
-  };
-
-  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider
+      value={{
+        user,
+        setUser,
+        isAuthenticated,
+        loading,
+        logout,
+      }}
+    >
+      {children}
+    </UserContext.Provider>
+  );
 }
 
 export function useUser() {
