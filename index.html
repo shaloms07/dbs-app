@@ -15,6 +15,16 @@
     <link rel="stylesheet" crossorigin href="/dbs-app/assets/index-BicRuyVj.css">
   </head>
   <body>
-    <div id="root"></div>
+    <script>
+      (function () {
+        var redirect = sessionStorage.getItem('gh-pages-redirect');
+        if (redirect) {
+          sessionStorage.removeItem('gh-pages-redirect');
+          var url = redirect.replace('/dbs-app', '') || '/';
+          window.history.replaceState(null, '', url);
+        }
+      })();
+    </script>
+    <div id="root"></div>
   </body>
 </html>
