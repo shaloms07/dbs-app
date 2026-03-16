@@ -55,7 +55,10 @@ export default function App() {
       <UserProvider>
         <ScoreProvider>
           <UIProvider>
-            <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <BrowserRouter
+              basename="/dbs-app"
+              future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+            >
               <AppRoutes />
               <Modal />
             </BrowserRouter>
