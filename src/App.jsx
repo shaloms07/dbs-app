@@ -56,7 +56,7 @@ export default function App() {
         <ScoreProvider>
           <UIProvider>
             <BrowserRouter
-              basename="/dbs-app"
+              basename={import.meta.env.BASE_URL}
               future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
             >
               <AppRoutes />
