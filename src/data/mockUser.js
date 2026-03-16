@@ -1,0 +1,30 @@
+export const mockUser = {
+  id: 'user-001',
+  firstName: 'Vikram',
+  lastName: 'Malhotra',
+  mobile: '9876543210',
+  email: 'vikram.malhotra@example.com',
+  licenceNumber: 'DL12AB2005000001234',
+  licenceExpiry: '2025-12-31',
+  vehicles: [
+    {
+      id: 'vehicle-001',
+      registrationNumber: 'UP32AB1234',
+      type: 'Car',
+      make: 'Maruti',
+      model: 'Swift',
+      cc: 1200,
+      chassis: 'CHASSIS123456789',
+      engine: 'ENGINE123456789',
+      color: 'White',
+      registrationExpiry: '2025-03-31',
+      insurancePolicyNumber: 'POL123456789',
+      insuranceExpiry: '2025-12-31',
+      lastSynced: new Date(Date.now() - 30 * 60 * 1000).toISOString(), // 30 mins ago
+    },
+  ],
+  createdAt: '2024-01-15T10:30:00Z',
+  updatedAt: new Date().toISOString(),
+  isVerified: true,
+  isNewUser: false,
+};
