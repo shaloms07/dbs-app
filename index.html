@@ -13,16 +13,6 @@
     <title>TrafficRewards</title>
   </head>
   <body>
-    <script>
-      (function () {
-        var redirect = sessionStorage.getItem('gh-pages-redirect');
-        if (redirect) {
-          sessionStorage.removeItem('gh-pages-redirect');
-          var url = redirect.replace('/dbs-app', '') || '/';
-          window.history.replaceState(null, '', url);
-        }
-      })();
-    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

@@ -3,7 +3,6 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "homepage": "https://shaloms07.github.io/dbs-app",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -12,9 +11,7 @@
     "lint:fix": "eslint src --ext .js,.jsx --fix",
     "test": "vitest",
     "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "axios": "^1.6.0",
@@ -35,7 +32,6 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react": "^7.33.0",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "gh-pages": "^6.3.0",
     "husky": "^8.0.0",
     "lint-staged": "^15.2.0",
     "postcss": "^8.4.0",
