@@ -1,7 +1,8 @@
 import api from './api';
 import { mockInsurance } from '@data/mockInsurance';
+import { isMockDataEnabled } from '@utils/env';
 
-const USE_MOCK = import.meta.env.VITE_USE_MOCK_DATA === 'true';
+const USE_MOCK = isMockDataEnabled();
 
 export const insuranceService = {
   getInsurance: async () => {
