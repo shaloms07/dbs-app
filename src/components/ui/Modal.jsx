@@ -26,9 +26,9 @@ export default function Modal() {
       }}
       className="fixed inset-0 z-40 bg-black/40"
     >
-      <div className="fixed bottom-0 left-0 right-0 z-50 mx-auto max-h-[88vh] max-w-screen-sm overflow-y-auto rounded-t-3xl bg-white p-6 shadow-2xl">
+      <div className="fixed bottom-0 left-0 right-0 z-50 mx-auto max-h-[88vh] max-w-screen-sm overflow-y-auto rounded-t-3xl bg-white p-6 pb-32 shadow-2xl">
         <div className="mb-4 flex justify-center">
-          <div className="h-1.5 w-12 rounded-full bg-neutral-300" />
+          {/* <div className="h-1.5 w-12 rounded-full bg-neutral-300" /> */}
         </div>
         <button
           onClick={closeModal}

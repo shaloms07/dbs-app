@@ -92,7 +92,7 @@ export default function LoginScreen() {
               A driver score experience designed for mobile, polished enough to demo beautifully on
               desktop.
             </p>
-            <div className="mt-6 grid grid-cols-2 gap-3">
+            {/* <div className="mt-6 grid grid-cols-2 gap-3">
               <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3">
                 <p className="text-xs uppercase tracking-[0.2em] text-white/60">Live score</p>
                 <p className="mt-1 text-2xl font-bold">247 / 300</p>
@@ -101,7 +101,7 @@ export default function LoginScreen() {
                 <p className="text-xs uppercase tracking-[0.2em] text-white/60">Rewards ready</p>
                 <p className="mt-1 text-2xl font-bold">4</p>
               </div>
-            </div>
+            </div> */}
           </div>
 
           <div className="px-6 pb-7 pt-6">
@@ -151,7 +151,7 @@ export default function LoginScreen() {
                     One-time password
                   </label>
                   <input
-                    type="text"
+                    type="tel"
                     value={otp}
                     onChange={(event) => setOtp(event.target.value.replace(/\D/g, '').slice(0, 6))}
                     placeholder="Enter 6-digit OTP"
