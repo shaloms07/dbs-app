@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { getBand, scoreToAngle, scoreToStrokeDashOffset, SCORE_MAX } from '@constants/scoreBands';
 
-export default function ScoreGauge({ score = 0, animated = true, size = 280 }) {
+export default function ScoreGauge({ score = 0, animated = true, size = 280, showValue = true }) {
   const svgRef = useRef(null);
   const band = getBand(score);
   const angle = scoreToAngle(score);
@@ -43,18 +43,16 @@ export default function ScoreGauge({ score = 0, animated = true, size = 280 }) {
       >
         <defs>
           <linearGradient id="gradientArc" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#ef4444" stopOpacity="0.3" />
-            <stop offset="25%" stopColor="#f97316" stopOpacity="0.3" />
-            <stop offset="50%" stopColor="#eab308" stopOpacity="0.3" />
-            <stop offset="75%" stopColor="#3b82f6" stopOpacity="0.3" />
-            <stop offset="100%" stopColor="#10b981" stopOpacity="0.3" />
+            <stop offset="0%" stopColor="#d95d39" stopOpacity="0.35" />
+            <stop offset="35%" stopColor="#e98647" stopOpacity="0.34" />
+            <stop offset="68%" stopColor="#b9c96b" stopOpacity="0.34" />
+            <stop offset="100%" stopColor="#1f8f80" stopOpacity="0.35" />
           </linearGradient>
           <linearGradient id="activeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#ef4444" />
-            <stop offset="25%" stopColor="#f97316" />
-            <stop offset="50%" stopColor="#eab308" />
-            <stop offset="75%" stopColor="#3b82f6" />
-            <stop offset="100%" stopColor="#10b981" />
+            <stop offset="0%" stopColor="#d95d39" />
+            <stop offset="35%" stopColor="#e98647" />
+            <stop offset="68%" stopColor="#b9c96b" />
+            <stop offset="100%" stopColor="#1f8f80" />
           </linearGradient>
         </defs>
 
@@ -112,31 +110,36 @@ export default function ScoreGauge({ score = 0, animated = true, size = 280 }) {
           <circle cx="140" cy="140" r="5" fill={band.color} />
         </g>
 
-        {/* Score text */}
-        <text
-          x="140"
-          y="128"
-          textAnchor="middle"
-          fontSize="52"
-          fontWeight="900"
-          fill="white"
-          fontFamily="Nunito, sans-serif"
-          style={{ textShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
-        >
-          {Math.round(score)}
-        </text>
+        {showValue && (
+          <>
+            <circle cx="140" cy="117" r="46" fill="rgba(255,248,240,0.16)" />
+            <circle cx="140" cy="117" r="36" fill="rgba(255,255,255,0.1)" />
 
-        {/* Score label */}
-        <text
-          x="140"
-          y="143"
-          textAnchor="middle"
-          fontSize="13"
-          fill="rgba(255,255,255,0.4)"
-          fontFamily="Nunito, sans-serif"
-        >
-          /900
-        </text>
+            <text
+              x="140"
+              y="128"
+              textAnchor="middle"
+              fontSize="52"
+              fontWeight="900"
+              fill="white"
+              fontFamily="Nunito, sans-serif"
+              style={{ textShadow: '0 4px 12px rgba(9,16,18,0.24)' }}
+            >
+              {Math.round(score)}
+            </text>
+
+            <text
+              x="140"
+              y="146"
+              textAnchor="middle"
+              fontSize="13"
+              fill="rgba(248,240,228,0.88)"
+              fontFamily="Nunito, sans-serif"
+            >
+              /{SCORE_MAX}
+            </text>
+          </>
+        )}
       </svg>
     </div>
   );

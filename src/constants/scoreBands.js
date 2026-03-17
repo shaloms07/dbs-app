@@ -1,46 +1,46 @@
-export const SCORE_MAX = 900;
+export const SCORE_MAX = 300;
 export const SCORE_MIN = 0;
 
 export const SCORE_BANDS = [
   {
     min: 0,
-    max: 299,
+    max: 99,
     label: 'Poor',
-    color: '#ef4444',
-    tailwind: 'text-red-500',
-    bgTailwind: 'bg-red-50',
+    color: '#d95d39',
+    tailwind: 'text-orange-700',
+    bgTailwind: 'bg-orange-50',
   },
   {
-    min: 300,
-    max: 499,
+    min: 100,
+    max: 159,
     label: 'Below Average',
-    color: '#f97316',
+    color: '#e98647',
     tailwind: 'text-orange-500',
     bgTailwind: 'bg-orange-50',
   },
   {
-    min: 500,
-    max: 649,
+    min: 160,
+    max: 219,
     label: 'Average',
-    color: '#eab308',
-    tailwind: 'text-amber-500',
+    color: '#d9b75f',
+    tailwind: 'text-amber-600',
     bgTailwind: 'bg-amber-50',
   },
   {
-    min: 650,
-    max: 799,
+    min: 220,
+    max: 259,
     label: 'Good',
-    color: '#3b82f6',
-    tailwind: 'text-blue-500',
-    bgTailwind: 'bg-blue-50',
+    color: '#5b8f72',
+    tailwind: 'text-emerald-700',
+    bgTailwind: 'bg-emerald-50',
   },
   {
-    min: 800,
-    max: 900,
+    min: 260,
+    max: 300,
     label: 'Excellent',
-    color: '#10b981',
-    tailwind: 'text-green-600',
-    bgTailwind: 'bg-green-50',
+    color: '#1f8f80',
+    tailwind: 'text-emerald-600',
+    bgTailwind: 'bg-emerald-50',
   },
 ];
 

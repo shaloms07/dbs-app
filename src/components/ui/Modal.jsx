@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useUI } from '@context/UIContext';
+import { useScore } from '@hooks/useScore';
 import ProgressBar from './ProgressBar';
 
 export default function Modal() {
@@ -129,7 +130,8 @@ function RedeemRewardModal({ reward }) {
 }
 
 function LockedRewardModal({ reward }) {
-  const currentScore = 742;
+  const { score } = useScore();
+  const currentScore = score?.current ?? 0;
   const progress = Math.min((currentScore / reward.minimumScore) * 100, 100);
 
   return (

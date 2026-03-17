@@ -2,11 +2,11 @@ import PropTypes from 'prop-types';
 
 export default function Badge({ children, label, color = 'grey', className = '', ...props }) {
   const colorClasses = {
-    green: 'bg-green-100 text-green-800',
-    blue: 'bg-blue-100 text-blue-800',
+    green: 'bg-emerald-100 text-emerald-800',
+    blue: 'bg-sky-100 text-sky-800',
     amber: 'bg-amber-100 text-amber-800',
     red: 'bg-red-100 text-red-800',
-    grey: 'bg-neutral-100 text-neutral-800',
+    grey: 'bg-[rgba(248,243,236,0.92)] text-neutral-800',
   };
 
   return (

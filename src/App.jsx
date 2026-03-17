@@ -55,13 +55,53 @@ export default function App() {
       <UserProvider>
         <ScoreProvider>
           <UIProvider>
-            <BrowserRouter
-              basename={import.meta.env.BASE_URL}
-              future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-            >
-              <AppRoutes />
-              <Modal />
-            </BrowserRouter>
+            <div className="app-shell">
+              <div className="app-shell__inner">
+                <aside className="app-shell__intro">
+                  <div className="app-shell__intro-card">
+                    <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-600">
+                      TrafficRewards
+                    </p>
+                    <h1 className="mt-4 font-display text-5xl font-bold leading-tight text-neutral-900">
+                      Safer driving,
+                      <br />
+                      cleaner rewards.
+                    </h1>
+                    <p className="mt-5 max-w-sm text-base leading-7 text-neutral-600">
+                      A polished mobile-first driver experience, presented inside a desktop webview
+                      shell for demos, QA, and stakeholder reviews.
+                    </p>
+                    <div className="mt-8 grid gap-4">
+                      <div className="surface-card rounded-[28px] p-5">
+                        <p className="text-sm font-semibold text-neutral-900">
+                          Mobile-first by default
+                        </p>
+                        <p className="mt-2 text-sm leading-6 text-neutral-600">
+                          Optimized for narrow touch screens while still feeling premium on desktop.
+                        </p>
+                      </div>
+                      <div className="surface-card rounded-[28px] p-5">
+                        <p className="text-sm font-semibold text-neutral-900">Mock-data friendly</p>
+                        <p className="mt-2 text-sm leading-6 text-neutral-600">
+                          Perfect for demos, frontend iteration, and design review before backend
+                          integration.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </aside>
+
+                <div className="app-shell__frame">
+                  <BrowserRouter
+                    basename={import.meta.env.BASE_URL}
+                    future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+                  >
+                    <AppRoutes />
+                    <Modal />
+                  </BrowserRouter>
+                </div>
+              </div>
+            </div>
           </UIProvider>
         </ScoreProvider>
       </UserProvider>

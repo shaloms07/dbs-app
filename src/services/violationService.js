@@ -3,20 +3,34 @@ import { mockViolations } from '@data/mockViolations';
 import { isMockDataEnabled } from '@utils/env';
 
 const USE_MOCK = isMockDataEnabled();
+const TWELVE_MONTHS_IN_MS = 365 * 24 * 60 * 60 * 1000;
+
+function withAging(violation) {
+  const violationDate = new Date(violation.date).getTime();
+  const isAgedOut = Date.now() - violationDate > TWELVE_MONTHS_IN_MS;
+
+  return {
+    ...violation,
+    isAgedOut,
+    status: isAgedOut && violation.status === 'active' ? 'expired' : violation.status,
+  };
+}
 
 export const violationService = {
   getViolations: async (page = 1, limit = 10) => {
     if (USE_MOCK) {
       return new Promise((resolve) => {
         setTimeout(() => {
+          const hydrated = mockViolations.map(withAging);
           const startIdx = (page - 1) * limit;
           const endIdx = startIdx + limit;
+
           resolve({
-            violations: mockViolations.slice(startIdx, endIdx),
-            total: mockViolations.length,
+            violations: hydrated.slice(startIdx, endIdx),
+            total: hydrated.length,
             page,
             limit,
-            hasMore: endIdx < mockViolations.length,
+            hasMore: endIdx < hydrated.length,
           });
         }, 700);
       });
@@ -30,7 +44,7 @@ export const violationService = {
       return new Promise((resolve) => {
         setTimeout(() => {
           const violation = mockViolations.find((v) => v.id === id);
-          resolve(violation || {});
+          resolve(violation ? withAging(violation) : {});
         }, 400);
       });
     }

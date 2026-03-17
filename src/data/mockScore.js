@@ -1,21 +1,22 @@
 export const mockScore = {
-  current: 742,
-  max: 900,
+  current: 247,
+  legacyScore: 742,
+  max: 300,
   band: 'Good',
   percentile: 72,
   lastUpdated: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-  target: 800,
+  target: 270,
   history: [
-    { month: 'Oct 25', score: 810 },
-    { month: 'Nov 25', score: 785 },
-    { month: 'Dec 25', score: 760 },
-    { month: 'Jan 26', score: 742 },
-    { month: 'Feb 26', score: 742 },
-    { month: 'Mar 26', score: 742 },
+    { month: 'Oct 25', score: 268 },
+    { month: 'Nov 25', score: 261 },
+    { month: 'Dec 25', score: 253 },
+    { month: 'Jan 26', score: 247 },
+    { month: 'Feb 26', score: 245 },
+    { month: 'Mar 26', score: 247 },
   ],
   stats: {
     cleanDays: 47,
-    violationsThisYear: 3,
+    violationsLast12Months: 3,
     streak: {
       currentDays: 47,
       bestDays: 96,
@@ -23,15 +24,15 @@ export const mockScore = {
   },
   nextMilestone: {
     daysUntilExpiry: 39,
-    scoreGainOnExpiry: 22,
+    scoreGainOnExpiry: 8,
     violationType: 'Seatbelt Violation',
-    pointsNeeded: 58,
+    pointsNeeded: 23,
   },
   simulator: {
     projections: [
-      { scenario: 'No new violations for 30 days', daysFromNow: 30, scoreGain: 18 },
-      { scenario: 'No new violations for 60 days', daysFromNow: 60, scoreGain: 34 },
-      { scenario: 'No new violations for 90 days', daysFromNow: 90, scoreGain: 58 },
+      { scenario: 'No new challans for 30 days', daysFromNow: 30, scoreGain: 7 },
+      { scenario: 'No new challans for 60 days', daysFromNow: 60, scoreGain: 14 },
+      { scenario: 'No new challans for 90 days', daysFromNow: 90, scoreGain: 23 },
     ],
   },
 };

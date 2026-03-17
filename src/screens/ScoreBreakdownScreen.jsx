@@ -49,12 +49,15 @@ export default function ScoreBreakdownScreen() {
           <div className="flex items-end justify-between">
             <div>
               <p className="text-sm text-neutral-500">Current DBS score</p>
-              <h2 className="mt-1 text-5xl font-bold text-brand-700">{score.current}</h2>
+              <h2 className="mt-1 text-5xl font-bold text-brand-700">
+                {score.current}
+                <span className="ml-2 text-xl font-semibold text-neutral-400">/ {score.max}</span>
+              </h2>
             </div>
             <Badge color="blue">{score.band}</Badge>
           </div>
           <p className="mt-3 text-sm text-neutral-600">
-            Your score is based on violations in the last 12 months.
+            Your score is based on challans recorded in the last 12 months.
           </p>
         </section>
 

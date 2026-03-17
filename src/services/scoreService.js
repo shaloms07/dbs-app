@@ -38,8 +38,8 @@ export const scoreService = {
         setTimeout(() => {
           resolve({
             currentScore: mockScore.current,
-            simulatedScore: mockScore.current + 45, // Assume improve by 45 points
-            improvement: 45,
+            simulatedScore: Math.min(mockScore.current + 23, mockScore.max),
+            improvement: 23,
             scenario: scenarioType,
             daysRequired: 90,
           });

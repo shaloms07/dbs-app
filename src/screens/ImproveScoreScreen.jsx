@@ -33,7 +33,10 @@ export default function ImproveScoreScreen() {
       <main className="mx-auto max-w-screen-sm space-y-6 px-4 py-6">
         <section className="rounded-3xl bg-gradient-to-br from-emerald-500 to-green-600 p-6 text-white shadow-lg">
           <p className="text-sm opacity-80">Current score</p>
-          <h2 className="mt-1 text-5xl font-bold">{score.current}</h2>
+          <h2 className="mt-1 text-5xl font-bold">
+            {score.current}
+            <span className="ml-2 text-xl font-semibold text-white/70">/ {score.max}</span>
+          </h2>
           <p className="mt-2 text-sm">
             Keep clean driving streaks to reach {score.target}+ faster.
           </p>

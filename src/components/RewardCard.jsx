@@ -17,8 +17,8 @@ export default function RewardCard({ reward, userScore = 0, onRedeemTap, onLocke
     <article
       className={`rounded-2xl border p-4 transition-all ${
         reward.isUnlocked
-          ? 'border-brand-100 bg-white shadow-sm hover:shadow-md'
-          : 'border-neutral-200 bg-neutral-50'
+          ? 'border-brand-100 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(245,251,249,0.92))] shadow-[0_16px_30px_rgba(26,36,40,0.08)] hover:shadow-[0_18px_34px_rgba(26,36,40,0.12)]'
+          : 'border-neutral-200 bg-[rgba(249,245,239,0.92)]'
       }`}
     >
       <div className="mb-3 flex items-start justify-between gap-3">
@@ -39,7 +39,7 @@ export default function RewardCard({ reward, userScore = 0, onRedeemTap, onLocke
       </div>
 
       <div className="mb-3 flex items-center justify-between text-xs text-neutral-500">
-        <span className="rounded-full bg-neutral-100 px-2 py-1 font-semibold capitalize text-neutral-700">
+        <span className="rounded-full bg-white px-2 py-1 font-semibold capitalize text-neutral-700 shadow-sm">
           {reward.category}
         </span>
         <span>Min score {reward.minimumScore}</span>
@@ -52,7 +52,10 @@ export default function RewardCard({ reward, userScore = 0, onRedeemTap, onLocke
             <span className="font-semibold text-amber-700">{reward.pointsNeeded} pts to go</span>
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-neutral-200">
-            <div className="h-full bg-brand-500" style={{ width: `${progress}%` }} />
+            <div
+              className="h-full bg-[linear-gradient(90deg,#d95d39,#e98647_45%,#1f8f80)]"
+              style={{ width: `${progress}%` }}
+            />
           </div>
         </div>
       )}
@@ -62,7 +65,7 @@ export default function RewardCard({ reward, userScore = 0, onRedeemTap, onLocke
         {reward.isUnlocked ? (
           <button
             onClick={() => onRedeemTap?.(reward)}
-            className="rounded-lg bg-brand-600 px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
+            className="rounded-lg bg-[linear-gradient(135deg,#132c32,#146d67)] px-3 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-95"
           >
             Redeem
           </button>

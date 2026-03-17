@@ -18,12 +18,12 @@ export default function ProfileScreen() {
   const band = getBand(score?.current ?? 0);
 
   return (
-    <div className="min-h-screen bg-neutral-50 pb-24">
-      <header className="sticky top-0 z-20 border-b border-neutral-200 bg-white">
-        <div className="mx-auto flex max-w-screen-sm items-center gap-3 px-4 py-4">
+    <div className="screen-wrap bg-transparent pb-28">
+      <header className="sticky top-0 z-20 border-b border-white/60 bg-[rgba(252,247,241,0.82)] backdrop-blur-xl">
+        <div className="screen-main flex items-center gap-3 px-4 py-4">
           <button
             onClick={() => navigate('/home')}
-            className="rounded-full bg-neutral-100 p-2"
+            className="rounded-2xl border border-white/70 bg-white/90 p-2.5 shadow-sm"
             aria-label="Back"
           >
             ←
@@ -32,19 +32,19 @@ export default function ProfileScreen() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-screen-sm space-y-6 px-4 py-6">
-        <section className="overflow-hidden rounded-3xl bg-white shadow-sm">
-          <div className="h-24 bg-gradient-to-r from-brand-600 to-blue-500" />
-          <div className="px-5 pb-5">
-            <div className="-mt-10 flex items-end gap-4">
-              <div className="flex h-20 w-20 items-center justify-center rounded-full border-4 border-white bg-brand-100 text-2xl font-bold text-brand-700">
+      <main className="screen-main space-y-5 px-4 py-5">
+        <section className="surface-card-strong overflow-hidden rounded-[32px]">
+          <div className="h-28 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.22),_transparent_30%),linear-gradient(135deg,#10252b,#146d67_56%,#d8c27b)]" />
+          <div className="px-5 pb-6">
+            <div className="-mt-8 flex items-end gap-4">
+              <div className="flex h-24 w-24 items-center justify-center rounded-[28px] border-4 border-white bg-brand-100 text-3xl font-bold text-brand-700 shadow-sm">
                 {initials}
               </div>
               <div className="pb-2">
                 <h2 className="text-2xl font-bold text-neutral-900">
                   {user.firstName} {user.lastName}
                 </h2>
-                <p className="text-sm text-neutral-500">{user.email}</p>
+                <p className="text-sm text-neutral-600">{user.email}</p>
               </div>
             </div>
           </div>
@@ -54,7 +54,7 @@ export default function ProfileScreen() {
           <DetailRow label="Mobile" value={`+91 ${maskString(user.mobile, 2, 2)}`} />
           <DetailRow label="Licence number" value={maskString(user.licence.number, 4, 4)} />
           <DetailRow label="Licence expiry" value={formatDateIN(user.licence.expiryDate)} />
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between rounded-[22px] bg-[rgba(248,243,236,0.92)] px-4 py-3">
             <span className="text-sm text-neutral-500">DBS band</span>
             <Badge
               color={
@@ -68,16 +68,29 @@ export default function ProfileScreen() {
 
         <DetailCard title="Vehicles">
           {user.vehicles.map((vehicle) => (
-            <div key={vehicle.id} className="rounded-2xl bg-neutral-50 p-4">
-              <p className="font-display text-lg font-bold text-brand-900">
-                {vehicle.registrationNumber}
-              </p>
-              <p className="mt-1 text-sm text-neutral-600">
-                {vehicle.make} {vehicle.model} • {vehicle.type}
-              </p>
-              <p className="mt-2 text-xs text-neutral-500">
-                Insurance expires {formatDateIN(vehicle.insuranceExpiry)}
-              </p>
+            <div
+              key={vehicle.id}
+              className="rounded-[24px] border border-neutral-200 bg-[rgba(248,243,236,0.92)] p-4"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="font-display text-lg font-bold text-brand-900">
+                    {vehicle.registrationNumber}
+                  </p>
+                  <p className="mt-1 text-sm text-neutral-600">
+                    {vehicle.make} {vehicle.model} • {vehicle.type}
+                  </p>
+                </div>
+                <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-neutral-700 shadow-sm">
+                  {vehicle.fuelType}
+                </span>
+              </div>
+              <div className="mt-4 flex items-center justify-between text-xs text-neutral-500">
+                <span>Insurance expires</span>
+                <span className="font-semibold text-neutral-700">
+                  {formatDateIN(vehicle.insuranceExpiry)}
+                </span>
+              </div>
             </div>
           ))}
         </DetailCard>
@@ -87,7 +100,7 @@ export default function ProfileScreen() {
             logout();
             navigate('/login');
           }}
-          className="w-full rounded-2xl border border-red-200 bg-red-50 px-4 py-3 font-semibold text-red-700"
+          className="w-full rounded-[28px] border border-red-200 bg-white px-4 py-3.5 font-semibold text-red-700 shadow-sm transition hover:bg-red-50"
         >
           Log out
         </button>
@@ -100,7 +113,7 @@ export default function ProfileScreen() {
 
 function DetailCard({ title, children }) {
   return (
-    <section className="rounded-3xl bg-white p-5 shadow-sm">
+    <section className="surface-card rounded-[30px] p-5">
       <h3 className="mb-4 text-lg font-bold text-neutral-900">{title}</h3>
       <div className="space-y-3">{children}</div>
     </section>
@@ -109,7 +122,7 @@ function DetailCard({ title, children }) {
 
 function DetailRow({ label, value }) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between rounded-[22px] bg-[rgba(248,243,236,0.92)] px-4 py-3">
       <span className="text-sm text-neutral-500">{label}</span>
       <span className="text-sm font-semibold text-neutral-900">{value}</span>
     </div>

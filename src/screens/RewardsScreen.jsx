@@ -32,44 +32,46 @@ export default function RewardsScreen() {
   const locked = rewards.filter((reward) => !reward.isUnlocked);
 
   return (
-    <div className="min-h-screen bg-neutral-50 pb-24">
-      <header className="sticky top-0 z-20 border-b border-neutral-200 bg-white">
-        <div className="mx-auto flex max-w-screen-sm items-center gap-3 px-4 py-4">
+    <div className="screen-wrap bg-transparent pb-28">
+      <header className="sticky top-0 z-20 border-b border-white/60 bg-[rgba(252,247,241,0.82)] backdrop-blur-xl">
+        <div className="screen-main flex items-center gap-3 px-4 py-4">
           <button
             onClick={() => navigate('/home')}
-            className="rounded-full bg-neutral-100 p-2"
+            className="rounded-2xl border border-white/70 bg-white/90 p-2.5 shadow-sm"
             aria-label="Back"
           >
             ←
           </button>
           <div>
             <h1 className="text-xl font-bold text-neutral-900">My Rewards</h1>
-            <p className="text-xs text-neutral-500">
+            <p className="text-xs text-neutral-600">
               {unlocked.length} unlocked • {locked.length} locked
             </p>
           </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-screen-sm space-y-6 px-4 py-6">
-        <section className="rounded-3xl bg-gradient-to-r from-fuchsia-600 to-pink-500 p-6 text-white shadow-lg">
-          <p className="text-sm opacity-80">Rewards unlocked by safer driving</p>
-          <h2 className="mt-2 text-3xl font-bold">{unlocked.length} ready to redeem</h2>
+      <main className="screen-main space-y-5 px-4 py-5">
+        <section className="surface-card-strong rounded-[32px] bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.18),_transparent_34%),linear-gradient(145deg,#10252b,#146d67_54%,#e98647)] px-5 py-6 text-white">
+          <p className="text-xs uppercase tracking-[0.24em] text-white/65">Rewards lounge</p>
+          <h2 className="mt-2 text-3xl font-bold">{unlocked.length} offers ready for you</h2>
           {nextUnlock && (
-            <p className="mt-2 text-sm opacity-90">
-              Reach {nextUnlock.minimumScore} to unlock more premium offers.
+            <p className="mt-3 max-w-sm text-sm leading-6 text-white/82">
+              Reach {nextUnlock.minimumScore} to unlock another wave of premium rewards.
             </p>
           )}
         </section>
 
-        <section className="rounded-3xl bg-white p-4 shadow-sm">
-          <div className="mb-3 flex flex-wrap gap-2">
+        <section className="surface-card rounded-[30px] px-4 py-4">
+          <div className="chip-scroll flex gap-2 overflow-x-auto">
             {CATEGORIES.map((item) => (
               <button
                 key={item}
                 onClick={() => setCategory(item)}
-                className={`rounded-full px-3 py-2 text-sm font-semibold capitalize ${
-                  category === item ? 'bg-brand-600 text-white' : 'bg-neutral-100 text-neutral-700'
+                className={`rounded-full px-4 py-2 text-sm font-semibold capitalize transition-all ${
+                  category === item
+                    ? 'bg-[linear-gradient(135deg,#132c32,#146d67)] text-white shadow-sm'
+                    : 'bg-[rgba(247,241,233,0.92)] text-neutral-700 hover:bg-white'
                 }`}
               >
                 {item}
@@ -78,7 +80,7 @@ export default function RewardsScreen() {
           </div>
         </section>
 
-        <section className="space-y-4">
+        <section className="grid gap-4">
           {rewards.map((reward) => (
             <RewardCard
               key={reward.id}
@@ -89,9 +91,9 @@ export default function RewardsScreen() {
             />
           ))}
           {rewards.length === 0 && (
-            <div className="rounded-3xl bg-white p-8 text-center shadow-sm">
+            <div className="surface-card rounded-[30px] p-8 text-center">
               <p className="text-lg font-semibold text-neutral-900">No rewards in this category</p>
-              <p className="mt-2 text-sm text-neutral-500">
+              <p className="mt-2 text-sm text-neutral-600">
                 Try another filter or improve your score to unlock more.
               </p>
             </div>
