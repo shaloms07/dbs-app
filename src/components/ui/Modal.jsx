@@ -108,8 +108,17 @@ function RedeemRewardModal({ reward }) {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl font-bold text-neutral-900">{reward?.brand}</h2>
-      <p className="text-sm text-neutral-600">{reward?.offerTitle}</p>
+      <div className="flex items-start gap-4 rounded-[24px] bg-[rgba(248,243,236,0.72)] p-3">
+        <img
+          src={reward?.cardImageUrl}
+          alt={`${reward?.brand} offer`}
+          className="h-24 w-24 flex-none rounded-[18px] bg-white object-contain"
+        />
+        <div className="min-w-0 pt-1">
+          <h2 className="text-2xl font-bold text-neutral-900">{reward?.brand}</h2>
+          <p className="mt-1 text-sm leading-6 text-neutral-600">{reward?.offerTitle}</p>
+        </div>
+      </div>
       <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4">
         <p className="text-sm text-neutral-600">Redemption code</p>
         <div className="mt-2 flex items-center justify-between rounded-xl bg-white px-4 py-3">
@@ -136,10 +145,19 @@ function LockedRewardModal({ reward }) {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl font-bold text-neutral-900">This reward is locked</h2>
-      <p className="text-sm text-neutral-600">
-        You need {reward.pointsNeeded} more points to unlock {reward.brand}.
-      </p>
+      <div className="flex items-start gap-4 rounded-[24px] bg-[rgba(248,243,236,0.72)] p-3">
+        <img
+          src={reward?.cardImageUrl}
+          alt={`${reward?.brand} offer`}
+          className="h-24 w-24 flex-none rounded-[18px] bg-white object-contain"
+        />
+        <div className="min-w-0 pt-1">
+          <h2 className="text-2xl font-bold text-neutral-900">This reward is locked</h2>
+          <p className="mt-1 text-sm leading-6 text-neutral-600">
+            You need {reward.pointsNeeded} more points to unlock {reward.brand}.
+          </p>
+        </div>
+      </div>
       <ProgressBar value={progress} color="#0284c7" />
       <div className="flex justify-between text-xs text-neutral-500">
         <span>Current: {currentScore}</span>

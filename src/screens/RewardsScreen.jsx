@@ -8,7 +8,17 @@ import { useUI } from '@context/UIContext';
 import { useRewards } from '@hooks/useRewards';
 import { useScore } from '@hooks/useScore';
 
-const CATEGORIES = ['all', 'fuel', 'food', 'auto', 'travel', 'shopping'];
+const CATEGORIES = [
+  'all',
+  'travel',
+  'food',
+  'grocery',
+  'electronics',
+  'entertainment',
+  'gifting',
+  'fashion',
+  'jewellery',
+];
 
 export default function RewardsScreen() {
   const navigate = useNavigate();

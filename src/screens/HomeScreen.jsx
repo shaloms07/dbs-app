@@ -164,28 +164,28 @@ export default function HomeScreen() {
               <Skeleton height="72px" rounded="xl" />
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="grid grid-cols-2 gap-3">
               {rewards.slice(0, 4).map((reward) => (
                 <button
                   key={reward.id}
                   onClick={() =>
                     openModal(reward.isUnlocked ? 'redeem-reward' : 'locked-reward', reward)
                   }
-                  className={`flex w-full items-center justify-between rounded-[24px] border px-4 py-3 text-left transition-all ${
+                  className={`overflow-hidden rounded-[24px] border transition-all ${
                     reward.isUnlocked
                       ? 'border-brand-100 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(245,251,249,0.92))] shadow-sm'
                       : 'border-neutral-200 bg-[rgba(249,245,239,0.92)]'
                   }`}
+                  aria-label={`${reward.brand} reward`}
                 >
-                  <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-neutral-500">
-                      {reward.brand}
-                    </p>
-                    <p className="mt-1 font-semibold text-neutral-900">{reward.offerTitle}</p>
+                  <div className="bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(244,238,231,0.92))] p-2">
+                    <img
+                      src={reward.cardImageUrl}
+                      alt={`${reward.brand} offer`}
+                      className="h-auto w-full rounded-[18px] object-contain"
+                      loading="lazy"
+                    />
                   </div>
-                  <span className="text-sm font-semibold text-brand-700">
-                    {reward.isUnlocked ? 'Redeem' : `+${reward.pointsNeeded} pts`}
-                  </span>
                 </button>
               ))}
             </div>
