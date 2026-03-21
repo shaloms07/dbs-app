@@ -3,13 +3,16 @@ import { getBand, scoreToAngle, scoreToStrokeDashOffset, SCORE_MAX, SCORE_MIN } 
 
 describe('scoreBands', () => {
   it('returns correct labels at key boundaries', () => {
-    expect(getBand(0).label).toBe('Poor');
-    expect(getBand(99).label).toBe('Poor');
-    expect(getBand(100).label).toBe('Below Average');
-    expect(getBand(219).label).toBe('Average');
-    expect(getBand(220).label).toBe('Good');
-    expect(getBand(260).label).toBe('Excellent');
-    expect(getBand(300).label).toBe('Excellent');
+    expect(getBand(0).label).toBe('Extreme Risk');
+    expect(getBand(60).label).toBe('Habitual Offender');
+    expect(getBand(90).label).toBe('Chronic Violator');
+    expect(getBand(120).label).toBe('Serious Risk');
+    expect(getBand(150).label).toBe('High Risk');
+    expect(getBand(180).label).toBe('At Risk');
+    expect(getBand(210).label).toBe('Marginal');
+    expect(getBand(240).label).toBe('Average');
+    expect(getBand(270).label).toBe('Responsible');
+    expect(getBand(300).label).toBe('Exemplary');
   });
 
   it('maps score to gauge angles', () => {

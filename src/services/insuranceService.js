@@ -1,5 +1,5 @@
 import api from './api';
-import { mockInsurance } from '@data/mockInsurance';
+import { getMockInsurance } from '@data/mockDbsData';
 import { isMockDataEnabled } from '@utils/env';
 
 const USE_MOCK = isMockDataEnabled();
@@ -9,7 +9,7 @@ export const insuranceService = {
     if (USE_MOCK) {
       return new Promise((resolve) => {
         setTimeout(() => {
-          resolve(mockInsurance);
+          resolve(getMockInsurance());
         }, 700);
       });
     }
@@ -20,6 +20,8 @@ export const insuranceService = {
   getInsurers: async () => {
     if (USE_MOCK) {
       return new Promise((resolve) => {
+        const mockInsurance = getMockInsurance();
+
         setTimeout(() => {
           resolve({
             insurers: mockInsurance.insurers,
@@ -38,6 +40,8 @@ export const insuranceService = {
     }
 
     return new Promise((resolve) => {
+      const mockInsurance = getMockInsurance();
+
       setTimeout(() => {
         const insurer = mockInsurance.insurers.find((i) => i.id === insurer_id);
         resolve({
@@ -58,6 +62,8 @@ export const insuranceService = {
   getRenewalHistory: async () => {
     if (USE_MOCK) {
       return new Promise((resolve) => {
+        const mockInsurance = getMockInsurance();
+
         setTimeout(() => {
           resolve({
             history: mockInsurance.renewalHistory,

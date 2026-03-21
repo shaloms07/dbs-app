@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@context/UserContext';
+import { MOCK_OTP, MOCK_PASSWORD, getSampleUsers } from '@data/mockDbsData';
 import { authService } from '@services/authService';
 import { setToken } from '@utils/auth';
+
+const SAMPLE_USERS = getSampleUsers();
 
 export default function LoginScreen() {
   const navigate = useNavigate();
   const { setUser } = useUser();
   const [mobile, setMobile] = useState('');
+  const [password, setPassword] = useState('');
   const [otp, setOtp] = useState('');
   const [step, setStep] = useState('mobile');
   const [loading, setLoading] = useState(false);
@@ -32,6 +36,12 @@ export default function LoginScreen() {
 
   const isValidMobile = /^[6-9]\d{9}$/.test(mobile);
 
+  const handleSelectSampleUser = (sampleUser) => {
+    setMobile(sampleUser.mobile);
+    setPassword(MOCK_PASSWORD);
+    setError('');
+  };
+
   const handleSendOtp = async (event) => {
     event.preventDefault();
     setError('');
@@ -41,9 +51,14 @@ export default function LoginScreen() {
       return;
     }
 
+    if (!password) {
+      setError('Enter your password');
+      return;
+    }
+
     setLoading(true);
     try {
-      await authService.sendOtp(mobile);
+      await authService.sendOtp(mobile, password);
       setStep('otp');
       setOtpTimer(30);
     } catch (err) {
@@ -89,19 +104,9 @@ export default function LoginScreen() {
               Earn better.
             </h1>
             <p className="mt-3 max-w-sm text-sm leading-6 text-white/78">
-              A driver score experience designed for mobile, polished enough to demo beautifully on
-              desktop.
+              Each DBS sample profile now has its own mock login, all using the same demo password
+              and OTP.
             </p>
-            {/* <div className="mt-6 grid grid-cols-2 gap-3">
-              <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3">
-                <p className="text-xs uppercase tracking-[0.2em] text-white/60">Live score</p>
-                <p className="mt-1 text-2xl font-bold">247 / 300</p>
-              </div>
-              <div className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3">
-                <p className="text-xs uppercase tracking-[0.2em] text-white/60">Rewards ready</p>
-                <p className="mt-1 text-2xl font-bold">4</p>
-              </div>
-            </div> */}
           </div>
 
           <div className="px-6 pb-7 pt-6">
@@ -113,6 +118,14 @@ export default function LoginScreen() {
 
             {step === 'mobile' ? (
               <form onSubmit={handleSendOtp} className="space-y-6">
+                <div className="rounded-3xl border border-neutral-200 bg-neutral-50 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-500">
+                    Demo Credentials
+                  </p>
+                  <p className="mt-2 text-sm text-neutral-700">Password: {MOCK_PASSWORD}</p>
+                  <p className="mt-1 text-sm text-neutral-700">OTP: {MOCK_OTP}</p>
+                </div>
+
                 <div>
                   <label className="mb-2 block text-sm font-semibold text-neutral-900">
                     Mobile number
@@ -131,9 +144,43 @@ export default function LoginScreen() {
                       className="flex-1 rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-base outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-100"
                     />
                   </div>
-                  <p className="mt-2 text-xs text-neutral-500">
-                    Enter a 10-digit number starting with 6, 7, 8, or 9.
-                  </p>
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-neutral-900">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    placeholder="Enter password"
+                    className="w-full rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-base outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-100"
+                  />
+                </div>
+
+                <div>
+                  <p className="mb-3 text-sm font-semibold text-neutral-900">Sample users</p>
+                  <div className="grid gap-3">
+                    {SAMPLE_USERS.map((sampleUser) => (
+                      <button
+                        key={sampleUser.registrationNumber}
+                        type="button"
+                        onClick={() => handleSelectSampleUser(sampleUser)}
+                        className="rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-left transition hover:border-brand-300 hover:bg-brand-50"
+                      >
+                        <p className="font-semibold text-neutral-900">
+                          {sampleUser.firstName} {sampleUser.lastName}
+                        </p>
+                        <p className="mt-1 text-sm text-neutral-600">
+                          +91 {sampleUser.mobile} - {sampleUser.registrationNumber}
+                        </p>
+                        <p className="mt-1 text-xs text-neutral-500">
+                          {sampleUser.vehicleType} - {sampleUser.band} - Score {sampleUser.score}
+                        </p>
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 <button
@@ -146,6 +193,11 @@ export default function LoginScreen() {
               </form>
             ) : (
               <form onSubmit={handleVerifyOtp} className="space-y-6">
+                <div className="rounded-3xl border border-neutral-200 bg-neutral-50 p-4 text-sm text-neutral-700">
+                  OTP was sent to +91 {mobile}. Use <span className="font-semibold">{MOCK_OTP}</span>{' '}
+                  to continue.
+                </div>
+
                 <div>
                   <label className="mb-2 block text-sm font-semibold text-neutral-900">
                     One-time password
@@ -157,9 +209,7 @@ export default function LoginScreen() {
                     placeholder="Enter 6-digit OTP"
                     className="w-full rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-center font-mono text-lg tracking-[0.3em] outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-100"
                   />
-                  <p className="mt-2 text-xs text-neutral-500">
-                    Mock mode: any 6 digits will continue.
-                  </p>
+                  <p className="mt-2 text-xs text-neutral-500">Use the fixed mock OTP: {MOCK_OTP}</p>
                 </div>
 
                 <div className="rounded-2xl bg-neutral-50 px-4 py-3 text-center text-sm text-neutral-600">

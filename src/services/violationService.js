@@ -1,5 +1,5 @@
 import api from './api';
-import { mockViolations } from '@data/mockViolations';
+import { DBS_SCORE_CONFIG, getMockViolations } from '@data/mockDbsData';
 import { isMockDataEnabled } from '@utils/env';
 
 const USE_MOCK = isMockDataEnabled();
@@ -7,7 +7,8 @@ const TWELVE_MONTHS_IN_MS = 365 * 24 * 60 * 60 * 1000;
 
 function withAging(violation) {
   const violationDate = new Date(violation.date).getTime();
-  const isAgedOut = Date.now() - violationDate > TWELVE_MONTHS_IN_MS;
+  const referenceTime = new Date(DBS_SCORE_CONFIG.referenceDate).getTime();
+  const isAgedOut = referenceTime - violationDate > TWELVE_MONTHS_IN_MS;
 
   return {
     ...violation,
@@ -21,6 +22,7 @@ export const violationService = {
     if (USE_MOCK) {
       return new Promise((resolve) => {
         setTimeout(() => {
+          const mockViolations = getMockViolations();
           const hydrated = mockViolations.map(withAging);
           const startIdx = (page - 1) * limit;
           const endIdx = startIdx + limit;
@@ -43,6 +45,7 @@ export const violationService = {
     if (USE_MOCK) {
       return new Promise((resolve) => {
         setTimeout(() => {
+          const mockViolations = getMockViolations();
           const violation = mockViolations.find((v) => v.id === id);
           resolve(violation ? withAging(violation) : {});
         }, 400);

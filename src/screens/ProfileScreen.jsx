@@ -16,6 +16,14 @@ export default function ProfileScreen() {
 
   const initials = `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
   const band = getBand(score?.current ?? 0);
+  const badgeColor =
+    score?.current >= 270
+      ? 'green'
+      : score?.current >= 210
+        ? 'blue'
+        : score?.current >= 120
+          ? 'amber'
+          : 'red';
 
   return (
     <div className="screen-wrap bg-transparent pb-28">
@@ -56,13 +64,7 @@ export default function ProfileScreen() {
           <DetailRow label="Licence expiry" value={formatDateIN(user.licence.expiryDate)} />
           <div className="flex items-center justify-between rounded-[22px] bg-[rgba(248,243,236,0.92)] px-4 py-3">
             <span className="text-sm text-neutral-500">DBS band</span>
-            <Badge
-              color={
-                band.label === 'Excellent' ? 'green' : band.label === 'Good' ? 'blue' : 'amber'
-              }
-            >
-              {band.label}
-            </Badge>
+            <Badge color={badgeColor}>{band.label}</Badge>
           </div>
         </DetailCard>
 

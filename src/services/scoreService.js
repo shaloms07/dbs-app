@@ -1,5 +1,5 @@
 import api from './api';
-import { mockScore } from '@data/mockScore';
+import { getMockScore } from '@data/mockDbsData';
 import { isMockDataEnabled } from '@utils/env';
 
 const USE_MOCK = isMockDataEnabled();
@@ -9,7 +9,7 @@ export const scoreService = {
     if (USE_MOCK) {
       return new Promise((resolve) => {
         setTimeout(() => {
-          resolve(mockScore);
+          resolve(getMockScore());
         }, 800);
       });
     }
@@ -20,6 +20,8 @@ export const scoreService = {
   getHistory: async (months = 12) => {
     if (USE_MOCK) {
       return new Promise((resolve) => {
+        const mockScore = getMockScore();
+
         setTimeout(() => {
           resolve({
             history: mockScore.history,
@@ -35,6 +37,8 @@ export const scoreService = {
   getSimulator: async (scenarioType = 'no_violations') => {
     if (USE_MOCK) {
       return new Promise((resolve) => {
+        const mockScore = getMockScore();
+
         setTimeout(() => {
           resolve({
             currentScore: mockScore.current,

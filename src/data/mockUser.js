@@ -1,32 +1,3 @@
-export const mockUser = {
-  id: 'user-001',
-  firstName: 'Vikram',
-  lastName: 'Malhotra',
-  mobile: '9876543210',
-  email: 'vikram.malhotra@example.com',
-  profilePhotoUrl: '',
-  createdAt: '2024-01-15T10:30:00Z',
-  licence: {
-    number: 'DL12AB2005000001234',
-    dob: '1990-04-22',
-    expiryDate: '2027-12-31',
-  },
-  vehicles: [
-    {
-      id: 'vehicle-001',
-      registrationNumber: 'UP32AB1234',
-      type: 'Private Car',
-      make: 'Maruti Suzuki',
-      model: 'Swift',
-      cc: 1197,
-      fuelType: 'Petrol',
-      color: 'Pearl White',
-      registrationExpiry: '2027-03-31',
-      insurancePolicyNumber: 'POL123456789',
-      insuranceExpiry: '2026-12-31',
-      lastSynced: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
-    },
-  ],
-  notificationsEnabled: true,
-  isVerified: true,
-};
+import { getMockUser } from './mockDbsData';
+
+export const mockUser = getMockUser();

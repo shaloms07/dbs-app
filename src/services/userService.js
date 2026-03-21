@@ -1,5 +1,6 @@
 import api from './api';
-import { mockUser } from '@data/mockUser';
+import { clearAllCache } from '@utils/cache';
+import { getMockUser, setActiveRegistration } from '@data/mockDbsData';
 import { isMockDataEnabled } from '@utils/env';
 
 const USE_MOCK = isMockDataEnabled();
@@ -8,7 +9,7 @@ export const userService = {
   getMe: async () => {
     if (USE_MOCK) {
       return new Promise((resolve) => {
-        setTimeout(() => resolve(mockUser), 300);
+        setTimeout(() => resolve(getMockUser()), 300);
       });
     }
 
@@ -17,7 +18,7 @@ export const userService = {
 
   updateMe: async (data) => {
     if (USE_MOCK) {
-      return { ...mockUser, ...data };
+      return { ...getMockUser(), ...data };
     }
 
     return api.put('/user/me', data);
@@ -27,14 +28,19 @@ export const userService = {
     if (USE_MOCK) {
       return new Promise((resolve) => {
         setTimeout(() => {
+          const activeRegistration = setActiveRegistration(registrationNumber);
+          const mockUser = getMockUser();
+
+          clearAllCache();
+
           resolve({
             ...mockUser,
             vehicles: [
               {
                 ...mockUser.vehicles[0],
-                id: `vehicle-${Date.now()}`,
-                registrationNumber,
-                type,
+                id: `vehicle-${activeRegistration.toLowerCase()}`,
+                registrationNumber: activeRegistration,
+                type: mockUser.vehicles[0].type ?? type,
                 lastSynced: new Date().toISOString(),
               },
             ],

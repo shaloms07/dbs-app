@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@context/UserContext';
 import { useScoreContext } from '@context/ScoreContext';
+import { SAMPLE_REGISTRATIONS } from '@data/mockDbsData';
 import { scoreService } from '@services/scoreService';
 import { userService } from '@services/userService';
 
@@ -43,7 +44,7 @@ export default function VehicleSetupScreen() {
       <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-xl">
         <h1 className="font-display text-3xl font-bold text-neutral-900">Add your vehicle</h1>
         <p className="mt-2 text-sm text-neutral-600">
-          We’ll use this to show your score, violations, and renewal benefits.
+          We&apos;ll use this to show your score, violations, and renewal benefits.
         </p>
 
         {error && (
@@ -60,9 +61,24 @@ export default function VehicleSetupScreen() {
             <input
               value={regNumber}
               onChange={(event) => setRegNumber(event.target.value.toUpperCase())}
-              placeholder="UP32AB1234"
+              placeholder="UP32CD5678"
               className="w-full rounded-xl border border-neutral-300 px-4 py-3 font-mono outline-none transition focus:border-brand-500"
             />
+            <p className="mt-2 text-xs text-neutral-500">
+              Try one of the sample registrations below to preview the DBS reference data.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {SAMPLE_REGISTRATIONS.map((sampleRegistration) => (
+                <button
+                  key={sampleRegistration}
+                  type="button"
+                  onClick={() => setRegNumber(sampleRegistration)}
+                  className="rounded-full border border-neutral-200 bg-neutral-50 px-3 py-1.5 font-mono text-xs text-neutral-700 transition hover:border-brand-300 hover:bg-brand-50"
+                >
+                  {sampleRegistration}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div>
