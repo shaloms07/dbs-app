@@ -41,11 +41,11 @@ const SAMPLE_USER_PROFILES = {
     licenceNumber: 'MH1220150001234',
   },
   UP32CD5678: {
-    firstName: 'Ishita',
-    lastName: 'Verma',
-    mobile: '9876543211',
-    email: 'ishita.verma@example.com',
-    licenceNumber: 'UP3220140005678',
+    firstName: 'Aarav',
+    lastName: 'Deshmukh',
+    mobile: '9876543210',
+    email: 'aarav.deshmukh@example.com',
+    licenceNumber: 'MH1220150001234',
   },
   DL8CAF9012: {
     firstName: 'Rohit',
@@ -71,37 +71,37 @@ const SAMPLE_USER_PROFILES = {
   RJ14KL7788: {
     firstName: 'Kavya',
     lastName: 'Singh',
-    mobile: '9876543215',
+    mobile: '9876543211',
     email: 'kavya.singh@example.com',
     licenceNumber: 'RJ142017007788',
   },
   GJ05QW3344: {
-    firstName: 'Dev',
-    lastName: 'Patel',
-    mobile: '9876543216',
-    email: 'dev.patel@example.com',
-    licenceNumber: 'GJ052015003344',
+    firstName: 'Kavya',
+    lastName: 'Singh',
+    mobile: '9876543211',
+    email: 'kavya.singh@example.com',
+    licenceNumber: 'RJ142017007788',
   },
   AP39ZX5566: {
-    firstName: 'Sneha',
-    lastName: 'Reddy',
-    mobile: '9876543217',
-    email: 'sneha.reddy@example.com',
-    licenceNumber: 'AP392014005566',
+    firstName: 'Meera',
+    lastName: 'Rao',
+    mobile: '9876543213',
+    email: 'meera.rao@example.com',
+    licenceNumber: 'KA012016003456',
   },
   WB20LM4433: {
-    firstName: 'Anik',
-    lastName: 'Chatterjee',
-    mobile: '9876543218',
-    email: 'anik.chatterjee@example.com',
-    licenceNumber: 'WB202016004433',
+    firstName: 'Kavya',
+    lastName: 'Singh',
+    mobile: '9876543211',
+    email: 'kavya.singh@example.com',
+    licenceNumber: 'RJ142017007788',
   },
   MP09RS7711: {
-    firstName: 'Sanjay',
-    lastName: 'Tiwari',
-    mobile: '9876543219',
-    email: 'sanjay.tiwari@example.com',
-    licenceNumber: 'MP092011007711',
+    firstName: 'Vignesh',
+    lastName: 'Iyer',
+    mobile: '9876543214',
+    email: 'vignesh.iyer@example.com',
+    licenceNumber: 'TN092012001122',
   },
 };
 
@@ -685,31 +685,54 @@ export function getDefaultRegistration() {
 }
 
 export function getSampleUsers() {
-  return SAMPLE_REGISTRATIONS.map((registrationNumber) => {
-    const profile = SAMPLE_USER_PROFILES[registrationNumber];
-    const record = DBS_RECORDS[registrationNumber];
+  const seenMobiles = new Set();
 
-    return {
-      registrationNumber,
+  return SAMPLE_REGISTRATIONS.reduce((users, registrationNumber) => {
+    const profile = SAMPLE_USER_PROFILES[registrationNumber];
+
+    if (seenMobiles.has(profile.mobile)) {
+      return users;
+    }
+
+    seenMobiles.add(profile.mobile);
+
+    const registrations = getRegistrationsForMobile(profile.mobile);
+    const vehicles = registrations.map((vehicleRegistration) => {
+      const record = DBS_RECORDS[vehicleRegistration];
+
+      return {
+        registrationNumber: vehicleRegistration,
+        score: record.score,
+        band: record.band,
+        vehicleType: record.vehicleType,
+      };
+    });
+
+    users.push({
       mobile: profile.mobile,
       password: MOCK_PASSWORD,
       otp: MOCK_OTP,
       firstName: profile.firstName,
       lastName: profile.lastName,
-      score: record.score,
-      band: record.band,
-      vehicleType: record.vehicleType,
-    };
-  });
+      vehicleCount: vehicles.length,
+      vehicles,
+      registrationNumber: registrations[0],
+    });
+
+    return users;
+  }, []);
+}
+
+export function getRegistrationsForMobile(mobile) {
+  const normalizedMobile = mobile?.trim();
+
+  return SAMPLE_REGISTRATIONS.filter(
+    (registrationNumber) => SAMPLE_USER_PROFILES[registrationNumber].mobile === normalizedMobile
+  );
 }
 
 export function getRegistrationForMobile(mobile) {
-  const normalizedMobile = mobile?.trim();
-  const matchedRegistration = SAMPLE_REGISTRATIONS.find(
-    (registrationNumber) => SAMPLE_USER_PROFILES[registrationNumber].mobile === normalizedMobile
-  );
-
-  return matchedRegistration ?? null;
+  return getRegistrationsForMobile(mobile)[0] ?? null;
 }
 
 export function getActiveRegistration() {
@@ -752,11 +775,18 @@ export function getRecordByRegistration(registrationNumber) {
       target: getTarget(record.score),
       history: buildHistory(record.score, record.recentTrend),
       stats: {
-        cleanDays: getDateDiffInDays(violations[0]?.date ?? MOCK_REFERENCE_DATE, MOCK_REFERENCE_DATE),
+        cleanDays: getDateDiffInDays(
+          violations[0]?.date ?? MOCK_REFERENCE_DATE,
+          MOCK_REFERENCE_DATE
+        ),
         violationsLast12Months: violations.filter((violation) => !violation.isAgedOut).length,
         streak: {
-          currentDays: getDateDiffInDays(violations[0]?.date ?? MOCK_REFERENCE_DATE, MOCK_REFERENCE_DATE),
-          bestDays: getDateDiffInDays(violations[0]?.date ?? MOCK_REFERENCE_DATE, MOCK_REFERENCE_DATE) + 42,
+          currentDays: getDateDiffInDays(
+            violations[0]?.date ?? MOCK_REFERENCE_DATE,
+            MOCK_REFERENCE_DATE
+          ),
+          bestDays:
+            getDateDiffInDays(violations[0]?.date ?? MOCK_REFERENCE_DATE, MOCK_REFERENCE_DATE) + 42,
         },
       },
       nextMilestone: getNextMilestone(violations),
@@ -836,9 +866,24 @@ export function getRecordByRegistration(registrationNumber) {
         },
       ],
       renewalHistory: [
-        { year: 2025, provider: 'ICICI Lombard', premium: 2450 + record.tpLoading, band: record.band },
-        { year: 2024, provider: 'Bajaj Allianz', premium: 2680 + Math.round(record.tpLoading / 2), band: 'Average' },
-        { year: 2023, provider: 'ICICI Lombard', premium: 2900 + Math.round(record.tpLoading / 2), band: 'Marginal' },
+        {
+          year: 2025,
+          provider: 'ICICI Lombard',
+          premium: 2450 + record.tpLoading,
+          band: record.band,
+        },
+        {
+          year: 2024,
+          provider: 'Bajaj Allianz',
+          premium: 2680 + Math.round(record.tpLoading / 2),
+          band: 'Average',
+        },
+        {
+          year: 2023,
+          provider: 'ICICI Lombard',
+          premium: 2900 + Math.round(record.tpLoading / 2),
+          band: 'Marginal',
+        },
       ],
     },
   };
@@ -851,9 +896,11 @@ export function getActiveMockRecord() {
 export function getMockUser(registrationNumber = getActiveRegistration()) {
   const activeRecord = getRecordByRegistration(registrationNumber);
   const profile = SAMPLE_USER_PROFILES[activeRecord.registrationNumber];
+  const registrations = getRegistrationsForMobile(profile.mobile);
+  const vehicles = registrations.map((vehicleRegistration) => buildVehicle(vehicleRegistration));
 
   return {
-    id: `user-${activeRecord.registrationNumber.toLowerCase()}`,
+    id: `user-${profile.mobile}`,
     firstName: profile.firstName,
     lastName: profile.lastName,
     mobile: profile.mobile,
@@ -865,15 +912,27 @@ export function getMockUser(registrationNumber = getActiveRegistration()) {
       dob: '1990-04-22',
       expiryDate: '2027-12-31',
     },
-    vehicles: [activeRecord.vehicle],
+    activeVehicleId: activeRecord.vehicle.id,
+    activeRegistrationNumber: activeRecord.registrationNumber,
+    vehicles,
     notificationsEnabled: true,
     isVerified: true,
   };
 }
 
 export function getMockUserByMobile(mobile) {
-  const registrationNumber = getRegistrationForMobile(mobile);
-  return registrationNumber ? getMockUser(registrationNumber) : null;
+  const registrations = getRegistrationsForMobile(mobile);
+
+  if (!registrations.length) {
+    return null;
+  }
+
+  const currentRegistration = getActiveRegistration();
+  const activeRegistration = registrations.includes(currentRegistration)
+    ? currentRegistration
+    : registrations[0];
+
+  return getMockUser(activeRegistration);
 }
 
 export function getMockScore() {

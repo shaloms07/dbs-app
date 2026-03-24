@@ -82,7 +82,13 @@ export default function LoginScreen() {
       const response = await authService.verifyOtp(mobile, otp);
       setToken(response.token);
       setUser(response.user);
-      navigate(response.isNewUser ? '/vehicle-setup' : '/home');
+      if (response.isNewUser) {
+        navigate('/vehicle-setup');
+      } else if ((response.user?.vehicles?.length ?? 0) > 1) {
+        navigate('/vehicle-select');
+      } else {
+        navigate('/home');
+      }
     } catch (err) {
       setError(err.message || 'Invalid OTP');
     } finally {
@@ -164,7 +170,7 @@ export default function LoginScreen() {
                   <div className="grid gap-3">
                     {SAMPLE_USERS.map((sampleUser) => (
                       <button
-                        key={sampleUser.registrationNumber}
+                        key={sampleUser.mobile}
                         type="button"
                         onClick={() => handleSelectSampleUser(sampleUser)}
                         className="rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-left transition hover:border-brand-300 hover:bg-brand-50"
@@ -173,10 +179,13 @@ export default function LoginScreen() {
                           {sampleUser.firstName} {sampleUser.lastName}
                         </p>
                         <p className="mt-1 text-sm text-neutral-600">
-                          +91 {sampleUser.mobile} - {sampleUser.registrationNumber}
+                          +91 {sampleUser.mobile} - {sampleUser.vehicleCount} vehicle
+                          {sampleUser.vehicleCount > 1 ? 's' : ''}
                         </p>
                         <p className="mt-1 text-xs text-neutral-500">
-                          {sampleUser.vehicleType} - {sampleUser.band} - Score {sampleUser.score}
+                          {sampleUser.vehicles
+                            .map((vehicle) => vehicle.registrationNumber)
+                            .join(', ')}
                         </p>
                       </button>
                     ))}
@@ -194,8 +203,8 @@ export default function LoginScreen() {
             ) : (
               <form onSubmit={handleVerifyOtp} className="space-y-6">
                 <div className="rounded-3xl border border-neutral-200 bg-neutral-50 p-4 text-sm text-neutral-700">
-                  OTP was sent to +91 {mobile}. Use <span className="font-semibold">{MOCK_OTP}</span>{' '}
-                  to continue.
+                  OTP was sent to +91 {mobile}. Use{' '}
+                  <span className="font-semibold">{MOCK_OTP}</span> to continue.
                 </div>
 
                 <div>
@@ -209,7 +218,9 @@ export default function LoginScreen() {
                     placeholder="Enter 6-digit OTP"
                     className="w-full rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-center font-mono text-lg tracking-[0.3em] outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-100"
                   />
-                  <p className="mt-2 text-xs text-neutral-500">Use the fixed mock OTP: {MOCK_OTP}</p>
+                  <p className="mt-2 text-xs text-neutral-500">
+                    Use the fixed mock OTP: {MOCK_OTP}
+                  </p>
                 </div>
 
                 <div className="rounded-2xl bg-neutral-50 px-4 py-3 text-center text-sm text-neutral-600">

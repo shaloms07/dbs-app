@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import Badge from '@components/ui/Badge';
 import BottomNav from '@components/BottomNav';
 import TrendChart from '@components/TrendChart';
+import VehicleSwitcher from '@components/VehicleSwitcher';
 import ViolationItem from '@components/ViolationItem';
 import ErrorState from '@components/ui/ErrorState';
 import FullPageSpinner from '@components/ui/FullPageSpinner';
@@ -12,7 +13,7 @@ import { useViolations } from '@hooks/useViolations';
 
 export default function ScoreBreakdownScreen() {
   const navigate = useNavigate();
-  const { user } = useUser();
+  const { user, activeVehicle } = useUser();
   const { openModal } = useUI();
   const { score, loading: scoreLoading, error: scoreError, refetch } = useScore();
   const { violations, loading: violationsLoading, error: violationsError } = useViolations();
@@ -29,17 +30,22 @@ export default function ScoreBreakdownScreen() {
   return (
     <div className="min-h-screen bg-neutral-50 pb-24">
       <header className="sticky top-0 z-20 border-b border-neutral-200 bg-white">
-        <div className="mx-auto flex max-w-screen-sm items-center gap-3 px-4 py-4">
-          <button
-            onClick={() => navigate('/home')}
-            className="rounded-full bg-neutral-100 p-2"
-            aria-label="Back"
-          >
-            ←
-          </button>
-          <div>
-            <h1 className="text-xl font-bold text-neutral-900">Score Breakdown</h1>
-            <p className="text-xs text-neutral-500">{user.vehicles[0]?.registrationNumber}</p>
+        <div className="mx-auto max-w-screen-sm px-4 py-4">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate('/home')}
+              className="rounded-full bg-neutral-100 p-2"
+              aria-label="Back"
+            >
+              ←
+            </button>
+            <div>
+              <h1 className="text-xl font-bold text-neutral-900">Score Breakdown</h1>
+              <p className="text-xs text-neutral-500">{activeVehicle?.registrationNumber}</p>
+            </div>
+          </div>
+          <div className="mt-3">
+            <VehicleSwitcher />
           </div>
         </div>
       </header>

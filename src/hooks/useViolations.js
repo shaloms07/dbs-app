@@ -1,21 +1,30 @@
 import { useEffect, useState } from 'react';
 import { violationService } from '@services/violationService';
 import { CACHE_KEYS, CACHE_TTL, getCache, setCache } from '@utils/cache';
+import { useUser } from '@context/UserContext';
 
 export function useViolations(initialPage = 1, limit = 10) {
+  const { activeVehicle } = useUser();
   const [violations, setViolations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(initialPage);
   const [hasMore, setHasMore] = useState(false);
   const [total, setTotal] = useState(0);
+  const registrationNumber = activeVehicle?.registrationNumber;
 
   const fetchViolations = async (pageNum = 1) => {
+    if (!registrationNumber) {
+      setViolations([]);
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
 
-      const cacheKey = `${CACHE_KEYS.VIOLATIONS}_p${pageNum}`;
+      const cacheKey = `${CACHE_KEYS.VIOLATIONS}_${registrationNumber}_p${pageNum}`;
       const cached = getCache(cacheKey);
       if (cached && pageNum === 1) {
         setViolations(cached.violations);
@@ -42,7 +51,7 @@ export function useViolations(initialPage = 1, limit = 10) {
   useEffect(() => {
     fetchViolations(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [registrationNumber]);
 
   return {
     violations,

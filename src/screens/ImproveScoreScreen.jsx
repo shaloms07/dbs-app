@@ -1,32 +1,41 @@
 import { useNavigate } from 'react-router-dom';
 import BottomNav from '@components/BottomNav';
 import TipCard from '@components/TipCard';
+import VehicleSwitcher from '@components/VehicleSwitcher';
 import ProgressBar from '@components/ui/ProgressBar';
 import FullPageSpinner from '@components/ui/FullPageSpinner';
-import { TIPS } from '@data/tips';
+import { getTipsForVehicle } from '@data/tips';
+import { useUser } from '@context/UserContext';
 import { useScore } from '@hooks/useScore';
 
 export default function ImproveScoreScreen() {
   const navigate = useNavigate();
+  const { activeVehicle } = useUser();
   const { score, loading } = useScore();
 
   if (loading && !score) return <FullPageSpinner />;
   if (!score) return <FullPageSpinner />;
 
   const goalProgress = Math.min((score.current / score.target) * 100, 100);
+  const safetyTips = getTipsForVehicle(activeVehicle?.type);
 
   return (
     <div className="min-h-screen bg-neutral-50 pb-24">
       <header className="sticky top-0 z-20 border-b border-neutral-200 bg-white">
-        <div className="mx-auto flex max-w-screen-sm items-center gap-3 px-4 py-4">
-          <button
-            onClick={() => navigate('/home')}
-            className="rounded-full bg-neutral-100 p-2"
-            aria-label="Back"
-          >
-            ←
-          </button>
-          <h1 className="text-xl font-bold text-neutral-900">Improve My Score</h1>
+        <div className="mx-auto max-w-screen-sm px-4 py-4">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => navigate('/home')}
+                className="rounded-full bg-neutral-100 p-2"
+                aria-label="Back"
+              >
+                ←
+              </button>
+              <h1 className="text-xl font-bold text-neutral-900">Improve My Score</h1>
+            </div>
+            <VehicleSwitcher compact />
+          </div>
         </div>
       </header>
 
@@ -90,10 +99,11 @@ export default function ImproveScoreScreen() {
           <div>
             <h3 className="text-lg font-bold text-neutral-900">Safety tips</h3>
             <p className="text-sm text-neutral-500">
-              Small habit changes can move your score steadily upward.
+              Small habit changes for your {activeVehicle?.type?.toLowerCase() ?? 'vehicle'} can
+              move your score steadily upward.
             </p>
           </div>
-          {TIPS.map((tip) => (
+          {safetyTips.map((tip) => (
             <TipCard key={tip.id} tip={tip} />
           ))}
         </section>

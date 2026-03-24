@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import BottomNav from '@components/BottomNav';
+import VehicleSwitcher from '@components/VehicleSwitcher';
 import Badge from '@components/ui/Badge';
 import FullPageSpinner from '@components/ui/FullPageSpinner';
 import { useUser } from '@context/UserContext';
@@ -9,7 +10,7 @@ import { formatDateIN, maskString } from '@utils/formatters';
 
 export default function ProfileScreen() {
   const navigate = useNavigate();
-  const { user, logout } = useUser();
+  const { user, activeVehicle, setActiveVehicle, logout } = useUser();
   const { score } = useScore();
 
   if (!user) return <FullPageSpinner />;
@@ -28,15 +29,20 @@ export default function ProfileScreen() {
   return (
     <div className="screen-wrap bg-transparent pb-28">
       <header className="sticky top-0 z-20 border-b border-white/60 bg-[rgba(252,247,241,0.82)] backdrop-blur-xl">
-        <div className="screen-main flex items-center gap-3 px-4 py-4">
-          <button
-            onClick={() => navigate('/home')}
-            className="rounded-2xl border border-white/70 bg-white/90 p-2.5 shadow-sm"
-            aria-label="Back"
-          >
-            ←
-          </button>
-          <h1 className="text-xl font-bold text-neutral-900">Profile</h1>
+        <div className="screen-main px-4 py-4">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate('/home')}
+              className="rounded-2xl border border-white/70 bg-white/90 p-2.5 shadow-sm"
+              aria-label="Back"
+            >
+              ←
+            </button>
+            <h1 className="text-xl font-bold text-neutral-900">Profile</h1>
+          </div>
+          <div className="mt-3">
+            <VehicleSwitcher />
+          </div>
         </div>
       </header>
 
@@ -83,9 +89,23 @@ export default function ProfileScreen() {
                     {vehicle.make} {vehicle.model} • {vehicle.type}
                   </p>
                 </div>
-                <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-neutral-700 shadow-sm">
-                  {vehicle.fuelType}
-                </span>
+                <div className="flex flex-col items-end gap-2">
+                  <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-neutral-700 shadow-sm">
+                    {vehicle.fuelType}
+                  </span>
+                  {vehicle.id === activeVehicle?.id ? (
+                    <span className="rounded-full bg-brand-600 px-3 py-1 text-[11px] font-semibold text-white">
+                      Active
+                    </span>
+                  ) : (
+                    <button
+                      onClick={() => setActiveVehicle(vehicle.registrationNumber)}
+                      className="rounded-full border border-brand-200 bg-white px-3 py-1 text-[11px] font-semibold text-brand-700"
+                    >
+                      Switch
+                    </button>
+                  )}
+                </div>
               </div>
               <div className="mt-4 flex items-center justify-between text-xs text-neutral-500">
                 <span>Insurance expires</span>

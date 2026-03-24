@@ -3,6 +3,7 @@ import BottomNav from '@components/BottomNav';
 import ScoreGauge from '@components/ScoreGauge';
 import ScoreStrip from '@components/ScoreStrip';
 import VehicleChip from '@components/VehicleChip';
+import VehicleSwitcher from '@components/VehicleSwitcher';
 import ErrorState from '@components/ui/ErrorState';
 import FullPageSpinner from '@components/ui/FullPageSpinner';
 import Skeleton from '@components/ui/Skeleton';
@@ -14,7 +15,7 @@ import { getGreeting } from '@utils/formatters';
 
 export default function HomeScreen() {
   const navigate = useNavigate();
-  const { user } = useUser();
+  const { user, activeVehicle } = useUser();
   const { score, loading: scoreLoading, error: scoreError, refetch } = useScore();
   const { rewards, loading: rewardsLoading, error: rewardsError } = useRewards(null, 1, 5);
   const { openModal } = useUI();
@@ -69,6 +70,9 @@ export default function HomeScreen() {
               <p className="mt-1 text-lg font-bold text-brand-700">{score.band}</p>
             </div>
           </div>
+          <div className="mt-4">
+            <VehicleSwitcher />
+          </div>
         </section>
 
         <section className="surface-card-strong rounded-[34px] bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.22),_transparent_36%),linear-gradient(165deg,#10252b,#135852_48%,#1f8f80_72%,#d8c27b)] px-4 pb-5 pt-6 text-white">
@@ -105,7 +109,7 @@ export default function HomeScreen() {
         <ScoreStrip score={score.current} percentile={score.percentile} />
 
         <VehicleChip
-          vehicle={user.vehicles[0]}
+          vehicle={activeVehicle}
           onTap={(vehicle) => openModal('vehicle-details', vehicle)}
         />
 

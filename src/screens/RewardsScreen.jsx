@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BottomNav from '@components/BottomNav';
 import RewardCard from '@components/RewardCard';
+import VehicleSwitcher from '@components/VehicleSwitcher';
 import ErrorState from '@components/ui/ErrorState';
 import FullPageSpinner from '@components/ui/FullPageSpinner';
 import { useUI } from '@context/UIContext';
@@ -44,19 +45,24 @@ export default function RewardsScreen() {
   return (
     <div className="screen-wrap bg-transparent pb-28">
       <header className="sticky top-0 z-20 border-b border-white/60 bg-[rgba(252,247,241,0.82)] backdrop-blur-xl">
-        <div className="screen-main flex items-center gap-3 px-4 py-4">
-          <button
-            onClick={() => navigate('/home')}
-            className="rounded-2xl border border-white/70 bg-white/90 p-2.5 shadow-sm"
-            aria-label="Back"
-          >
-            ←
-          </button>
-          <div>
-            <h1 className="text-xl font-bold text-neutral-900">My Rewards</h1>
-            <p className="text-xs text-neutral-600">
-              {unlocked.length} unlocked • {locked.length} locked
-            </p>
+        <div className="screen-main px-4 py-4">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate('/home')}
+              className="rounded-2xl border border-white/70 bg-white/90 p-2.5 shadow-sm"
+              aria-label="Back"
+            >
+              ←
+            </button>
+            <div>
+              <h1 className="text-xl font-bold text-neutral-900">My Rewards</h1>
+              <p className="text-xs text-neutral-600">
+                {unlocked.length} unlocked • {locked.length} locked
+              </p>
+            </div>
+          </div>
+          <div className="mt-3">
+            <VehicleSwitcher />
           </div>
         </div>
       </header>
