@@ -21,15 +21,10 @@ export const DBS_REPEAT_MULTIPLIERS = {
 
 export const SAMPLE_REGISTRATIONS = [
   'MH31AB1234',
-  'UP32CD5678',
-  'DL8CAF9012',
-  'KA01MN3456',
-  'TN09GH1122',
-  'RJ14KL7788',
-  'GJ05QW3344',
-  'AP39ZX5566',
-  'WB20LM4433',
-  'MP09RS7711',
+  'MH12AB5555',
+  'MH34CD6666',
+  'KA02GH8888',
+  'TN22JK9999',
 ];
 
 const SAMPLE_USER_PROFILES = {
@@ -39,6 +34,8 @@ const SAMPLE_USER_PROFILES = {
     mobile: '9876543210',
     email: 'aarav.deshmukh@example.com',
     licenceNumber: 'MH1220150001234',
+    residenceCity: 'Nagpur',
+    residenceState: 'Maharashtra',
   },
   UP32CD5678: {
     firstName: 'Aarav',
@@ -46,6 +43,8 @@ const SAMPLE_USER_PROFILES = {
     mobile: '9876543210',
     email: 'aarav.deshmukh@example.com',
     licenceNumber: 'MH1220150001234',
+    residenceCity: 'Lucknow',
+    residenceState: 'Uttar Pradesh',
   },
   DL8CAF9012: {
     firstName: 'Rohit',
@@ -53,6 +52,8 @@ const SAMPLE_USER_PROFILES = {
     mobile: '9876543212',
     email: 'rohit.kumar@example.com',
     licenceNumber: 'DL820130009012',
+    residenceCity: 'Delhi',
+    residenceState: 'Delhi',
   },
   KA01MN3456: {
     firstName: 'Meera',
@@ -60,6 +61,8 @@ const SAMPLE_USER_PROFILES = {
     mobile: '9876543213',
     email: 'meera.rao@example.com',
     licenceNumber: 'KA012016003456',
+    residenceCity: 'Bengaluru',
+    residenceState: 'Karnataka',
   },
   TN09GH1122: {
     firstName: 'Vignesh',
@@ -67,6 +70,8 @@ const SAMPLE_USER_PROFILES = {
     mobile: '9876543214',
     email: 'vignesh.iyer@example.com',
     licenceNumber: 'TN092012001122',
+    residenceCity: 'Chennai',
+    residenceState: 'Tamil Nadu',
   },
   RJ14KL7788: {
     firstName: 'Kavya',
@@ -74,6 +79,8 @@ const SAMPLE_USER_PROFILES = {
     mobile: '9876543211',
     email: 'kavya.singh@example.com',
     licenceNumber: 'RJ142017007788',
+    residenceCity: 'Pune',
+    residenceState: 'Maharashtra',
   },
   GJ05QW3344: {
     firstName: 'Kavya',
@@ -81,6 +88,8 @@ const SAMPLE_USER_PROFILES = {
     mobile: '9876543211',
     email: 'kavya.singh@example.com',
     licenceNumber: 'RJ142017007788',
+    residenceCity: 'Surat',
+    residenceState: 'Gujarat',
   },
   AP39ZX5566: {
     firstName: 'Meera',
@@ -88,6 +97,8 @@ const SAMPLE_USER_PROFILES = {
     mobile: '9876543213',
     email: 'meera.rao@example.com',
     licenceNumber: 'KA012016003456',
+    residenceCity: 'Vijayawada',
+    residenceState: 'Andhra Pradesh',
   },
   WB20LM4433: {
     firstName: 'Kavya',
@@ -95,6 +106,8 @@ const SAMPLE_USER_PROFILES = {
     mobile: '9876543211',
     email: 'kavya.singh@example.com',
     licenceNumber: 'RJ142017007788',
+    residenceCity: 'Kolkata',
+    residenceState: 'West Bengal',
   },
   MP09RS7711: {
     firstName: 'Vignesh',
@@ -102,6 +115,62 @@ const SAMPLE_USER_PROFILES = {
     mobile: '9876543214',
     email: 'vignesh.iyer@example.com',
     licenceNumber: 'TN092012001122',
+    residenceCity: 'Bhopal',
+    residenceState: 'Madhya Pradesh',
+  },
+  MH12AB5555: {
+    firstName: 'Saanvi',
+    lastName: 'Patil',
+    mobile: '9876543220',
+    email: 'saanvi.patil@example.com',
+    licenceNumber: 'MH122019005555',
+    residenceCity: 'Mumbai',
+    residenceState: 'Maharashtra',
+  },
+  MH34CD6666: {
+    firstName: 'Arjun',
+    lastName: 'Shah',
+    mobile: '9876543221',
+    email: 'arjun.shah@example.com',
+    licenceNumber: 'MH342020006666',
+    residenceCity: 'Pune',
+    residenceState: 'Maharashtra',
+  },
+  GJ19EF7777: {
+    firstName: 'Isha',
+    lastName: 'Mehta',
+    mobile: '9876543222',
+    email: 'isha.mehta@example.com',
+    licenceNumber: 'GJ192018007777',
+    residenceCity: 'Ahmedabad',
+    residenceState: 'Gujarat',
+  },
+  KA02GH8888: {
+    firstName: 'Dev',
+    lastName: 'Nair',
+    mobile: '9876543223',
+    email: 'dev.nair@example.com',
+    licenceNumber: 'KA022017008888',
+    residenceCity: 'Bengaluru',
+    residenceState: 'Karnataka',
+  },
+  TN22JK9999: {
+    firstName: 'Ananya',
+    lastName: 'Ramakrishnan',
+    mobile: '9876543224',
+    email: 'ananya.r@example.com',
+    licenceNumber: 'TN222019009999',
+    residenceCity: 'Chennai',
+    residenceState: 'Tamil Nadu',
+  },
+  DL99ZZ0001: {
+    firstName: 'Kabir',
+    lastName: 'Malhotra',
+    mobile: '9876543225',
+    email: 'kabir.malhotra@example.com',
+    licenceNumber: 'DL992021000001',
+    residenceCity: 'Delhi',
+    residenceState: 'Delhi',
   },
 };
 
@@ -185,6 +254,54 @@ const VEHICLE_UI_META = {
     fuelType: 'Petrol',
     color: 'Carbon Steel',
     insuranceExpiry: '2026-04-30',
+  },
+  MH12AB5555: {
+    make: 'Tata',
+    model: 'Nexon',
+    cc: 1199,
+    fuelType: 'Petrol',
+    color: 'Grassland Beige',
+    insuranceExpiry: '2026-08-31',
+  },
+  MH34CD6666: {
+    make: 'Honda',
+    model: 'Activa 125',
+    cc: 124,
+    fuelType: 'Petrol',
+    color: 'Pearl Siren Blue',
+    insuranceExpiry: '2026-09-15',
+  },
+  GJ19EF7777: {
+    make: 'Maruti Suzuki',
+    model: 'Swift',
+    cc: 1197,
+    fuelType: 'Petrol',
+    color: 'Luster Blue',
+    insuranceExpiry: '2026-10-20',
+  },
+  KA02GH8888: {
+    make: 'Hyundai',
+    model: 'Creta',
+    cc: 1497,
+    fuelType: 'Petrol',
+    color: 'Abyss Black',
+    insuranceExpiry: '2026-11-25',
+  },
+  TN22JK9999: {
+    make: 'TVS',
+    model: 'iQube',
+    cc: 3,
+    fuelType: 'Electric',
+    color: 'Titanium Grey',
+    insuranceExpiry: '2026-12-12',
+  },
+  DL99ZZ0001: {
+    make: 'Kia',
+    model: 'Seltos',
+    cc: 1497,
+    fuelType: 'Petrol',
+    color: 'Intense Red',
+    insuranceExpiry: '2026-10-05',
   },
 };
 
@@ -557,6 +674,126 @@ const DBS_RECORDS = {
       },
     ],
   },
+  MH12AB5555: {
+    vehicleType: 'Private Car',
+    score: 274,
+    band: 'Responsible',
+    severityIndex: 14,
+    recentTrend: 'Stable',
+    challanStatus: 'Clear',
+    tpLoading: 0,
+    purpose: 'Mumbai commuter with a mostly clean record',
+    violations: [
+      {
+        date: '2026-02-14',
+        type: 'Wrong Parking',
+        location: 'Mumbai',
+        thz: 'L',
+        status: 'Paid',
+        impact: 10,
+      },
+    ],
+  },
+  MH34CD6666: {
+    vehicleType: 'Two Wheeler',
+    score: 252,
+    band: 'Average',
+    severityIndex: 26,
+    recentTrend: 'Up',
+    challanStatus: 'Pending',
+    tpLoading: 800,
+    purpose: 'Pune rider with one recent minor offence',
+    violations: [
+      {
+        date: '2026-01-29',
+        type: 'Helmet Violation',
+        location: 'Pune',
+        thz: 'M',
+        status: 'Open',
+        impact: 30,
+      },
+    ],
+  },
+  GJ19EF7777: {
+    vehicleType: 'Private Car',
+    score: 268,
+    band: 'Average',
+    severityIndex: 20,
+    recentTrend: 'Stable',
+    challanStatus: 'Clear',
+    tpLoading: 300,
+    purpose: 'Ahmedabad user with steady compliance',
+    violations: [
+      {
+        date: '2025-12-10',
+        type: 'Wrong Parking',
+        location: 'Ahmedabad',
+        thz: 'L',
+        status: 'Paid',
+        impact: 10,
+      },
+    ],
+  },
+  KA02GH8888: {
+    vehicleType: 'Private Car',
+    score: 284,
+    band: 'Exemplary',
+    severityIndex: 10,
+    recentTrend: 'Up',
+    challanStatus: 'Clear',
+    tpLoading: 0,
+    purpose: 'Bengaluru driver with very clean record',
+    violations: [
+      {
+        date: '2026-02-01',
+        type: 'Wrong Parking',
+        location: 'Bengaluru',
+        thz: 'L',
+        status: 'Paid',
+        impact: 10,
+      },
+    ],
+  },
+  TN22JK9999: {
+    vehicleType: 'Two Wheeler',
+    score: 242,
+    band: 'Responsible',
+    severityIndex: 18,
+    recentTrend: 'Stable',
+    challanStatus: 'Clear',
+    tpLoading: 200,
+    purpose: 'Chennai commuter with light violations',
+    violations: [
+      {
+        date: '2026-01-18',
+        type: 'No Helmet Strap',
+        location: 'Chennai',
+        thz: 'L',
+        status: 'Paid',
+        impact: 10,
+      },
+    ],
+  },
+  DL99ZZ0001: {
+    vehicleType: 'Private Car',
+    score: 286,
+    band: 'Exemplary',
+    severityIndex: 9,
+    recentTrend: 'Up',
+    challanStatus: 'Clear',
+    tpLoading: 0,
+    purpose: 'Delhi city user with a near-pristine record',
+    violations: [
+      {
+        date: '2026-02-20',
+        type: 'Wrong Parking',
+        location: 'Delhi',
+        thz: 'L',
+        status: 'Paid',
+        impact: 10,
+      },
+    ],
+  },
 };
 
 function getStorage() {
@@ -681,7 +918,7 @@ function getProjectionGain(score, daysFromNow) {
 }
 
 export function getDefaultRegistration() {
-  return 'UP32CD5678';
+  return 'MH31AB1234';
 }
 
 export function getSampleUsers() {
@@ -905,6 +1142,8 @@ export function getMockUser(registrationNumber = getActiveRegistration()) {
     lastName: profile.lastName,
     mobile: profile.mobile,
     email: profile.email,
+    residenceCity: profile.residenceCity,
+    residenceState: profile.residenceState,
     profilePhotoUrl: '',
     createdAt: '2024-01-15T10:30:00Z',
     licence: {

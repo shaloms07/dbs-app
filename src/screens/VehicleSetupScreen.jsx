@@ -61,11 +61,11 @@ export default function VehicleSetupScreen() {
             <input
               value={regNumber}
               onChange={(event) => setRegNumber(event.target.value.toUpperCase())}
-              placeholder="UP32CD5678"
+              placeholder="MH31AB1234"
               className="w-full rounded-xl border border-neutral-300 px-4 py-3 font-mono outline-none transition focus:border-brand-500"
             />
             <p className="mt-2 text-xs text-neutral-500">
-              Try one of the sample registrations below to preview the DBS reference data.
+              Try one of the five sample registrations below to preview the DBS reference data.
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               {SAMPLE_REGISTRATIONS.map((sampleRegistration) => (

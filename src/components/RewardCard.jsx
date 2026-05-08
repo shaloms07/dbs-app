@@ -1,16 +1,27 @@
 import PropTypes from 'prop-types';
+import { getRewardFulfillmentLabel } from '@utils/rewardFulfillment';
 
 export default function RewardCard({ reward, userScore = 0, onRedeemTap, onLockedTap }) {
   const progress = reward.isUnlocked ? 100 : Math.min((userScore / reward.minimumScore) * 100, 100);
+  const isDevelopment =
+    (typeof import.meta !== 'undefined' && import.meta.env?.DEV) ||
+    (typeof globalThis.process !== 'undefined' &&
+      globalThis.process?.env?.NODE_ENV === 'development');
 
   return (
     <article
-      className={`overflow-hidden rounded-[28px] border transition-all ${
+      className={`relative overflow-hidden rounded-[28px] border transition-all ${
         reward.isUnlocked
           ? 'border-brand-100 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(245,251,249,0.92))] shadow-[0_16px_30px_rgba(26,36,40,0.08)] hover:shadow-[0_18px_34px_rgba(26,36,40,0.12)]'
           : 'border-neutral-200 bg-[rgba(249,245,239,0.92)]'
       }`}
     >
+      {isDevelopment && Number.isFinite(reward.score) && (
+        <div className="absolute right-4 top-4 z-10 rounded-full bg-neutral-200 px-2.5 py-1 text-[11px] font-semibold text-neutral-600 shadow-sm">
+          {reward.score.toFixed(2)}
+        </div>
+      )}
+
       <div className="border-b border-neutral-200/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(244,238,231,0.92))] p-3">
         <div className="overflow-hidden rounded-[22px] bg-white">
           <img
@@ -38,6 +49,17 @@ export default function RewardCard({ reward, userScore = 0, onRedeemTap, onLocke
         </div>
 
         <p className="text-sm leading-6 text-neutral-600">{reward.offerCondition}</p>
+
+        <div className="flex flex-wrap gap-2">
+          <MetaBadge label={getRewardFulfillmentLabel(reward)} />
+          <MetaBadge label={reward.couponMode === 'dynamic' ? 'Dynamic coupon' : 'Static coupon'} />
+          <MetaBadge label={`Max ${reward.maxUseLimit ?? 1} uses`} />
+          <MetaBadge
+            label={reward.renewAfterDays ? `Renews in ${reward.renewAfterDays} days` : 'No renewal'}
+          />
+          {reward.requiresConfirmation && <MetaBadge label="Confirmation required" />}
+          {reward.confirmationPinRequired && <MetaBadge label="PIN required" />}
+        </div>
 
         <div className="flex items-center justify-between text-xs text-neutral-500">
           <span>Min score {reward.minimumScore}</span>
@@ -81,6 +103,14 @@ export default function RewardCard({ reward, userScore = 0, onRedeemTap, onLocke
   );
 }
 
+function MetaBadge({ label }) {
+  return (
+    <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-neutral-600">
+      {label}
+    </span>
+  );
+}
+
 RewardCard.propTypes = {
   reward: PropTypes.shape({
     id: PropTypes.string.isRequired,
@@ -93,6 +123,13 @@ RewardCard.propTypes = {
     pointsNeeded: PropTypes.number.isRequired,
     expiresAt: PropTypes.string.isRequired,
     cardImageUrl: PropTypes.string.isRequired,
+    score: PropTypes.number,
+    fulfillmentType: PropTypes.string,
+    couponMode: PropTypes.oneOf(['static', 'dynamic']),
+    maxUseLimit: PropTypes.number,
+    renewAfterDays: PropTypes.number,
+    requiresConfirmation: PropTypes.bool,
+    confirmationPinRequired: PropTypes.bool,
   }).isRequired,
   userScore: PropTypes.number,
   onRedeemTap: PropTypes.func,

@@ -1,17 +1,18 @@
 import api from './api';
 import { mockRewards } from '@data/mockRewards';
 import { isMockDataEnabled } from '@utils/env';
+import { filterRewardsByLocation } from '@utils/rewardLocation';
 
 const USE_MOCK = isMockDataEnabled();
 
 export const rewardsService = {
-  getRewards: async (category = null, page = 1, limit = 10) => {
+  getRewards: async (category = null, page = 1, limit = 10, user = null) => {
     if (USE_MOCK) {
       return new Promise((resolve) => {
         setTimeout(() => {
-          let filtered = mockRewards;
+          let filtered = filterRewardsByLocation(mockRewards, user);
           if (category) {
-            filtered = mockRewards.filter((r) => r.category === category);
+            filtered = filtered.filter((r) => r.category === category);
           }
           const startIdx = (page - 1) * limit;
           const endIdx = startIdx + limit;

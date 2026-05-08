@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react';
 import { rewardsService } from '@services/rewardsService';
 import { CACHE_KEYS, CACHE_TTL, setCache, getCache } from '@utils/cache';
 
-export function useRewards(category = null, initialPage = 1, limit = 10) {
+export function useRewards(category = null, initialPage = 1, limit = 10, user = null) {
   const [rewards, setRewards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(initialPage);
   const [hasMore, setHasMore] = useState(false);
   const [total, setTotal] = useState(0);
+  const locationKey = user?.residenceCity || user?.city || user?.residenceState || 'all';
 
   const fetchRewards = async (pageNum = 1) => {
     try {
@@ -16,7 +17,7 @@ export function useRewards(category = null, initialPage = 1, limit = 10) {
       setError(null);
 
       // Check cache first
-      const cacheKey = `${CACHE_KEYS.REWARDS}_${category || 'all'}_p${pageNum}`;
+      const cacheKey = `${CACHE_KEYS.REWARDS}_${category || 'all'}_p${pageNum}_l${limit}_${locationKey}`;
       const cached = getCache(cacheKey);
       if (cached && pageNum === 1) {
         setRewards(cached.rewards);
@@ -28,7 +29,7 @@ export function useRewards(category = null, initialPage = 1, limit = 10) {
       }
 
       // Fetch from API/mock
-      const data = await rewardsService.getRewards(category, pageNum, limit);
+      const data = await rewardsService.getRewards(category, pageNum, limit, user);
 
       setRewards(data.rewards);
       setHasMore(data.hasMore);
@@ -47,7 +48,7 @@ export function useRewards(category = null, initialPage = 1, limit = 10) {
   useEffect(() => {
     fetchRewards(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [category]);
+  }, [category, locationKey, limit]);
 
   const loadMore = () => {
     if (hasMore) {

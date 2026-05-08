@@ -6,8 +6,15 @@ import VehicleSwitcher from '@components/VehicleSwitcher';
 import ErrorState from '@components/ui/ErrorState';
 import FullPageSpinner from '@components/ui/FullPageSpinner';
 import { useUI } from '@context/UIContext';
+import { useUser } from '@context/UserContext';
 import { useRewards } from '@hooks/useRewards';
+import { useRewardInteractions } from '@hooks/useRewardInteractions';
 import { useScore } from '@hooks/useScore';
+import {
+  buildRecommendationProfile,
+  mapOffersToRecommendationOffers,
+} from '@utils/recommendationAdapters';
+import { generateRecommendedFeed } from '@utils/recommendationEngine';
 
 const CATEGORIES = [
   'all',
@@ -24,23 +31,42 @@ const CATEGORIES = [
 export default function RewardsScreen() {
   const navigate = useNavigate();
   const { openModal } = useUI();
+  const { user } = useUser();
+  const { interactionProfile, trackInteraction } = useRewardInteractions(user);
   const [category, setCategory] = useState('all');
   const { score } = useScore();
-  const { rewards, loading, error, refetch } = useRewards(category === 'all' ? null : category);
+  const { rewards, loading, error, refetch } = useRewards(
+    category === 'all' ? null : category,
+    1,
+    1000,
+    user
+  );
+  const recommendationProfile = useMemo(
+    () => buildRecommendationProfile(user, score, interactionProfile),
+    [user, score, interactionProfile]
+  );
+  const recommendedRewards = useMemo(() => {
+    // Personalised feed — ranked by relevance, urgency, value, and completion likelihood
+    return generateRecommendedFeed(
+      mapOffersToRecommendationOffers(rewards),
+      recommendationProfile,
+      rewards.length
+    );
+  }, [recommendationProfile, rewards]);
 
   const nextUnlock = useMemo(
     () =>
-      rewards
+      recommendedRewards
         .filter((reward) => !reward.isUnlocked)
         .sort((a, b) => a.minimumScore - b.minimumScore)[0],
-    [rewards]
+    [recommendedRewards]
   );
 
   if (loading && rewards.length === 0) return <FullPageSpinner />;
   if (error && rewards.length === 0) return <ErrorState message={error} onRetry={refetch} />;
 
-  const unlocked = rewards.filter((reward) => reward.isUnlocked);
-  const locked = rewards.filter((reward) => !reward.isUnlocked);
+  const unlocked = recommendedRewards.filter((reward) => reward.isUnlocked);
+  const locked = recommendedRewards.filter((reward) => !reward.isUnlocked);
 
   return (
     <div className="screen-wrap bg-transparent pb-28">
@@ -79,6 +105,9 @@ export default function RewardsScreen() {
         </section>
 
         <section className="surface-card rounded-[30px] px-4 py-4">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">
+            Showing rewards for {user?.residenceCity || 'your city'}
+          </p>
           <div className="chip-scroll flex gap-2 overflow-x-auto">
             {CATEGORIES.map((item) => (
               <button
@@ -97,16 +126,25 @@ export default function RewardsScreen() {
         </section>
 
         <section className="grid gap-4">
-          {rewards.map((reward) => (
+          {recommendedRewards.map((reward) => (
             <RewardCard
               key={reward.id}
               reward={reward}
               userScore={score?.current ?? 0}
-              onRedeemTap={(selected) => openModal('redeem-reward', selected)}
-              onLockedTap={(selected) => openModal('locked-reward', selected)}
+              onRedeemTap={(selected) => {
+                void trackInteraction(selected, 'click');
+                openModal(
+                  selected.requiresConfirmation ? 'confirm-redeem-reward' : 'redeem-reward',
+                  selected
+                );
+              }}
+              onLockedTap={(selected) => {
+                void trackInteraction(selected, 'click');
+                openModal('locked-reward', selected);
+              }}
             />
           ))}
-          {rewards.length === 0 && (
+          {recommendedRewards.length === 0 && (
             <div className="surface-card rounded-[30px] p-8 text-center">
               <p className="text-lg font-semibold text-neutral-900">No rewards in this category</p>
               <p className="mt-2 text-sm text-neutral-600">

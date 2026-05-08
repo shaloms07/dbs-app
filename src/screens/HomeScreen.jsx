@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BottomNav from '@components/BottomNav';
 import ScoreGauge from '@components/ScoreGauge';
@@ -10,15 +11,34 @@ import Skeleton from '@components/ui/Skeleton';
 import { useUI } from '@context/UIContext';
 import { useUser } from '@context/UserContext';
 import { useRewards } from '@hooks/useRewards';
+import { useRewardInteractions } from '@hooks/useRewardInteractions';
 import { useScore } from '@hooks/useScore';
 import { getGreeting } from '@utils/formatters';
+import {
+  buildRecommendationProfile,
+  mapOffersToRecommendationOffers,
+} from '@utils/recommendationAdapters';
+import { generateRecommendedFeed } from '@utils/recommendationEngine';
 
 export default function HomeScreen() {
   const navigate = useNavigate();
   const { user, activeVehicle } = useUser();
   const { score, loading: scoreLoading, error: scoreError, refetch } = useScore();
-  const { rewards, loading: rewardsLoading, error: rewardsError } = useRewards(null, 1, 5);
+  const { rewards, loading: rewardsLoading, error: rewardsError } = useRewards(null, 1, 5, user);
   const { openModal } = useUI();
+  const { interactionProfile, trackInteraction } = useRewardInteractions(user);
+  const recommendationProfile = useMemo(
+    () => buildRecommendationProfile(user, score, interactionProfile),
+    [user, score, interactionProfile]
+  );
+  const recommendedRewards = useMemo(() => {
+    // Personalised feed — ranked by relevance, urgency, value, and completion likelihood
+    return generateRecommendedFeed(
+      mapOffersToRecommendationOffers(rewards),
+      recommendationProfile,
+      4
+    );
+  }, [recommendationProfile, rewards]);
 
   if ((scoreLoading || rewardsLoading) && !score) return <FullPageSpinner />;
   if ((scoreError || rewardsError) && !score) {
@@ -26,8 +46,8 @@ export default function HomeScreen() {
   }
   if (!user || !score) return <FullPageSpinner />;
 
-  const unlockedRewards = rewards.filter((reward) => reward.isUnlocked);
-  const nextUnlock = rewards
+  const unlockedRewards = recommendedRewards.filter((reward) => reward.isUnlocked);
+  const nextUnlock = recommendedRewards
     .filter((reward) => !reward.isUnlocked)
     .sort((a, b) => a.pointsNeeded - b.pointsNeeded)[0];
 
@@ -169,12 +189,20 @@ export default function HomeScreen() {
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-3">
-              {rewards.slice(0, 4).map((reward) => (
+              {recommendedRewards.map((reward) => (
                 <button
                   key={reward.id}
-                  onClick={() =>
-                    openModal(reward.isUnlocked ? 'redeem-reward' : 'locked-reward', reward)
-                  }
+                  onClick={() => {
+                    void trackInteraction(reward, 'click');
+                    openModal(
+                      reward.isUnlocked
+                        ? reward.requiresConfirmation
+                          ? 'confirm-redeem-reward'
+                          : 'redeem-reward'
+                        : 'locked-reward',
+                      reward
+                    );
+                  }}
                   className={`overflow-hidden rounded-[24px] border transition-all ${
                     reward.isUnlocked
                       ? 'border-brand-100 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(245,251,249,0.92))] shadow-sm'
