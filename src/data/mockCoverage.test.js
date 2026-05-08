@@ -33,4 +33,25 @@ describe('mock coverage', () => {
       ).toBe(true);
     }
   });
+
+  it('supports multiple vehicles on the same mobile number', () => {
+    const mumbaiUser = getMockUser('MH12AB5555');
+    const puneUser = getMockUser('MH34CD6666');
+    const bengaluruUser = getMockUser('KA02GH8888');
+
+    expect(mumbaiUser.vehicles.map((vehicle) => vehicle.registrationNumber)).toEqual(
+      expect.arrayContaining(['MH12AB5555', 'MH12SC7788'])
+    );
+    expect(mumbaiUser.vehicles).toHaveLength(2);
+
+    expect(puneUser.vehicles.map((vehicle) => vehicle.registrationNumber)).toEqual(
+      expect.arrayContaining(['MH34CD6666', 'MH34UV4444'])
+    );
+    expect(puneUser.vehicles).toHaveLength(2);
+
+    expect(bengaluruUser.vehicles.map((vehicle) => vehicle.registrationNumber)).toEqual(
+      expect.arrayContaining(['KA02GH8888', 'KA02QT2026'])
+    );
+    expect(bengaluruUser.vehicles).toHaveLength(2);
+  });
 });

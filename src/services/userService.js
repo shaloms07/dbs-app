@@ -29,22 +29,11 @@ export const userService = {
       return new Promise((resolve) => {
         setTimeout(() => {
           const activeRegistration = setActiveRegistration(registrationNumber);
-          const mockUser = getMockUser();
+          const mockUser = getMockUser(activeRegistration);
 
           clearAllCache();
 
-          resolve({
-            ...mockUser,
-            vehicles: [
-              {
-                ...mockUser.vehicles[0],
-                id: `vehicle-${activeRegistration.toLowerCase()}`,
-                registrationNumber: activeRegistration,
-                type: mockUser.vehicles[0].type ?? type,
-                lastSynced: new Date().toISOString(),
-              },
-            ],
-          });
+          resolve(mockUser);
         }, 600);
       });
     }
