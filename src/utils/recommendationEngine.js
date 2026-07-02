@@ -58,6 +58,18 @@ function resolveHoursRemaining(expiresAt) {
   return null;
 }
 
+function urgencyBucket(expiresAt) {
+  const hoursRemaining = resolveHoursRemaining(expiresAt);
+
+  if (!Number.isFinite(hoursRemaining) || hoursRemaining > 72) {
+    return 0;
+  }
+
+  if (hoursRemaining <= 6) return 3;
+  if (hoursRemaining <= 24) return 2;
+  return 1;
+}
+
 export function relevanceScore(userInterests, offerCategories) {
   return cosineSimilarity(userInterests, offerCategories);
 }
@@ -142,9 +154,13 @@ export function generateRecommendedFeed(offers, userProfile, topN = 10) {
   return (offers ?? [])
     .map((offer, index) => {
       const score = calculateOfferScore(offer, userProfile);
-      return { offer, score, index };
+      return { offer, score, index, urgency: urgencyBucket(offer?.expiresAt) };
     })
     .sort((left, right) => {
+      if (right.urgency !== left.urgency) {
+        return right.urgency - left.urgency;
+      }
+
       if (right.score !== left.score) {
         return right.score - left.score;
       }

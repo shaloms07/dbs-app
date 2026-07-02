@@ -14,6 +14,8 @@ import { useRewards } from '@hooks/useRewards';
 import { useRewardInteractions } from '@hooks/useRewardInteractions';
 import { useScore } from '@hooks/useScore';
 import { getGreeting } from '@utils/formatters';
+import mainLogo from '../media/Trafficrewards Logo-Main.png';
+import whiteLogo from '../media/Trafficrewards Logo-White.png';
 import {
   buildRecommendationProfile,
   mapOffersToRecommendationOffers,
@@ -53,12 +55,10 @@ export default function HomeScreen() {
 
   return (
     <div className="screen-wrap bg-transparent pb-28">
-      <header className="sticky top-0 z-20 border-b border-white/60 bg-[rgba(252,247,241,0.82)] backdrop-blur-xl">
+      <header className="sticky top-0 z-20 border-b border-white/70 bg-white/85 backdrop-blur-xl">
         <div className="screen-main flex items-center justify-between px-4 py-4">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-brand-600">
-              TrafficRewards
-            </p>
+            <img src={mainLogo} alt="TrafficRewards" className="h-auto w-40" />
             <h1 className="font-display text-xl font-bold text-neutral-900">Driver dashboard</h1>
           </div>
           <button
@@ -95,7 +95,12 @@ export default function HomeScreen() {
           </div>
         </section>
 
-        <section className="surface-card-strong rounded-[34px] bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.22),_transparent_36%),linear-gradient(165deg,#10252b,#135852_48%,#1f8f80_72%,#d8c27b)] px-4 pb-5 pt-6 text-white">
+        <section className="surface-card-strong brand-gradient rounded-[34px] px-4 pb-5 pt-6 text-white">
+          <img
+            src={whiteLogo}
+            alt="TrafficRewards"
+            className="mx-auto mb-2 h-auto w-36 opacity-95"
+          />
           {scoreLoading ? (
             <Skeleton height="260px" rounded="xl" />
           ) : (
@@ -117,7 +122,7 @@ export default function HomeScreen() {
               </div>
             </>
           )}
-          <div className="mt-2 rounded-[24px] border border-white/20 bg-[rgba(11,29,34,0.18)] px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.14)]">
+          <div className="mt-2 rounded-[24px] border border-white/20 bg-white/10 px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.14)]">
             <p className="text-xs uppercase tracking-[0.22em] text-white/70">Snapshot</p>
             <p className="mt-1 text-sm leading-6 text-white/90">
               Clean for {score.stats.cleanDays} days and {nextUnlock?.pointsNeeded ?? 0} points away
@@ -134,11 +139,11 @@ export default function HomeScreen() {
         />
 
         <section className="grid grid-cols-2 gap-3">
-          <StatCard label="Clean Days" value={score.stats.cleanDays} accent="text-emerald-700" />
+          <StatCard label="Clean Days" value={score.stats.cleanDays} accent="text-brand-700" />
           <StatCard
             label="Challans Last 12 Months"
             value={score.stats.violationsLast12Months}
-            accent="text-amber-600"
+            accent="text-cyan-600"
           />
           <StatCard
             label="Rewards Available"
@@ -148,13 +153,13 @@ export default function HomeScreen() {
           <StatCard
             label="Points to Next Unlock"
             value={nextUnlock?.pointsNeeded ?? 0}
-            accent="text-orange-700"
+            accent="text-brand-900"
           />
         </section>
 
         <button
           onClick={() => navigate('/improve')}
-          className="surface-card-strong w-full rounded-[30px] bg-[linear-gradient(135deg,#172126,#135852_58%,#e98647)] p-5 text-left text-white"
+          className="surface-card-strong w-full rounded-[30px] bg-[linear-gradient(135deg,#273471,#0058D1_60%,#00D3FF)] p-5 text-left text-white"
         >
           <p className="text-xs uppercase tracking-[0.24em] text-white/70">Improve my score</p>
           <div className="mt-2 flex items-center justify-between">
@@ -205,12 +210,12 @@ export default function HomeScreen() {
                   }}
                   className={`overflow-hidden rounded-[24px] border transition-all ${
                     reward.isUnlocked
-                      ? 'border-brand-100 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(245,251,249,0.92))] shadow-sm'
-                      : 'border-neutral-200 bg-[rgba(249,245,239,0.92)]'
+                      ? 'border-brand-100 brand-gradient-soft shadow-sm'
+                      : 'border-neutral-200 bg-neutral-50'
                   }`}
                   aria-label={`${reward.brand} reward`}
                 >
-                  <div className="bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(244,238,231,0.92))] p-2">
+                  <div className="bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(238,246,255,0.92))] p-2">
                     <img
                       src={reward.cardImageUrl}
                       alt={`${reward.brand} offer`}
@@ -232,7 +237,7 @@ export default function HomeScreen() {
 
 function StatCard({ label, value, accent }) {
   return (
-    <article className="surface-card rounded-[26px] border border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(248,242,235,0.92))] p-4">
+    <article className="surface-card rounded-[26px] border border-white/70 brand-gradient-soft p-4">
       <p className="text-xs font-semibold uppercase tracking-[0.16em] text-neutral-500">{label}</p>
       <p className={`mt-3 text-3xl font-bold ${accent}`}>{value}</p>
     </article>

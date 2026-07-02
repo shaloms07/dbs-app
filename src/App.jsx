@@ -7,6 +7,7 @@ import { UserProvider } from '@context/UserContext';
 import { ScoreProvider } from '@context/ScoreContext';
 import { UIProvider } from '@context/UIContext';
 import { useUser } from '@context/UserContext';
+import mainLogo from './media/Trafficrewards Logo-Main.png';
 
 // Lazy load screens
 const LoginScreen = lazy(() => import('@screens/LoginScreen'));
@@ -61,9 +62,7 @@ export default function App() {
               <div className="app-shell__inner">
                 <aside className="app-shell__intro">
                   <div className="app-shell__intro-card">
-                    <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-600">
-                      TrafficRewards
-                    </p>
+                    <img src={mainLogo} alt="TrafficRewards" className="h-auto w-56" />
                     <h1 className="mt-4 font-display text-5xl font-bold leading-tight text-neutral-900">
                       Safer driving,
                       <br />

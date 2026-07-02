@@ -79,4 +79,38 @@ describe('recommendationEngine', () => {
     expect(generateRecommendedFeed(offers, userProfile, 1)[0].id).toBe('a');
     expect(generateRecommendedFeed(offers, userProfile, 1)[0]).toHaveProperty('score');
   });
+
+  it('pushes near-expiry rewards ahead of less urgent ones inside the same feed', () => {
+    const userProfile = {
+      pointBalance: 200,
+      interests: { travel: 1 },
+      completionRates: {},
+    };
+
+    const offers = [
+      {
+        id: 'soon',
+        categories: { grocery: 1 },
+        points: 20,
+        effort: 5,
+        expiresAt: 4,
+        type: 'coupon',
+        cost: 10,
+      },
+      {
+        id: 'later',
+        categories: { travel: 1 },
+        points: 100,
+        effort: 5,
+        expiresAt: 120,
+        type: 'coupon',
+        cost: 10,
+      },
+    ];
+
+    const feed = generateRecommendedFeed(offers, userProfile, 2);
+
+    expect(feed[0].id).toBe('soon');
+    expect(feed[1].id).toBe('later');
+  });
 });

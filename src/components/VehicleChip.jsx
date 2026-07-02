@@ -7,7 +7,7 @@ export default function VehicleChip({ vehicle, onTap }) {
   return (
     <button
       onClick={() => onTap?.(vehicle)}
-      className="w-full rounded-[28px] border border-brand-100 bg-[linear-gradient(135deg,rgba(232,244,241,0.94),rgba(255,255,255,0.96))] p-4 text-left shadow-[0_14px_28px_rgba(26,36,40,0.08)] transition-shadow hover:shadow-[0_18px_34px_rgba(26,36,40,0.12)]"
+      className="w-full rounded-[28px] border border-brand-100 brand-gradient-soft p-4 text-left shadow-[0_14px_28px_rgba(0,40,96,0.08)] transition-shadow hover:shadow-[0_18px_34px_rgba(0,40,96,0.12)]"
     >
       <div className="mb-2 flex items-baseline justify-between gap-3">
         <h3 className="font-display text-lg font-bold text-brand-900">

@@ -4,6 +4,8 @@ import { useUser } from '@context/UserContext';
 import { MOCK_OTP, MOCK_PASSWORD, getSampleUsers } from '@data/mockDbsData';
 import { authService } from '@services/authService';
 import { setToken } from '@utils/auth';
+import background from '../media/Background.png';
+import whiteLogo from '../media/Trafficrewards Logo-White.png';
 
 const SAMPLE_USERS = getSampleUsers();
 
@@ -99,11 +101,16 @@ export default function LoginScreen() {
   return (
     <div className="screen-wrap flex items-center justify-center px-4 py-8">
       <div className="screen-main">
-        <div className="surface-card-strong overflow-hidden rounded-[32px]">
-          <div className="bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.18),_transparent_30%),linear-gradient(135deg,#132c32,#146d67_56%,#e98647)] px-6 pb-7 pt-8 text-white">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/70">
-              TrafficRewards
-            </p>
+        <div className="surface-card-strong overflow-hidden rounded-[32px] bg-white">
+          <div
+            className="relative overflow-hidden bg-brand-900 px-6 pb-7 pt-8 text-white"
+            style={{
+              backgroundImage: `linear-gradient(135deg, rgba(39,52,113,0.82), rgba(0,88,209,0.74)), url("${background}")`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
+            <img src={whiteLogo} alt="TrafficRewards" className="h-auto w-48" />
             <h1 className="mt-4 font-display text-4xl font-bold leading-tight">
               Drive cleaner.
               <br />
@@ -195,7 +202,7 @@ export default function LoginScreen() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full rounded-2xl bg-neutral-900 px-4 py-3.5 font-semibold text-white transition hover:bg-neutral-800 disabled:opacity-60"
+                  className="w-full rounded-2xl bg-[var(--color-primary)] px-4 py-3.5 font-semibold text-white transition hover:bg-brand-700 disabled:opacity-60"
                 >
                   {loading ? 'Sending OTP...' : 'Send OTP'}
                 </button>
@@ -240,7 +247,7 @@ export default function LoginScreen() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full rounded-2xl bg-neutral-900 px-4 py-3.5 font-semibold text-white transition hover:bg-neutral-800 disabled:opacity-60"
+                  className="w-full rounded-2xl bg-[var(--color-primary)] px-4 py-3.5 font-semibold text-white transition hover:bg-brand-700 disabled:opacity-60"
                 >
                   {loading ? 'Verifying...' : 'Verify and continue'}
                 </button>

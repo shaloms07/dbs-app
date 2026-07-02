@@ -15,6 +15,7 @@ import {
   mapOffersToRecommendationOffers,
 } from '@utils/recommendationAdapters';
 import { generateRecommendedFeed } from '@utils/recommendationEngine';
+import whiteLogo from '../media/Trafficrewards Logo-White.png';
 
 const CATEGORIES = [
   'all',
@@ -46,7 +47,7 @@ export default function RewardsScreen() {
     [user, score, interactionProfile]
   );
   const recommendedRewards = useMemo(() => {
-    // Personalised feed — ranked by relevance, urgency, value, and completion likelihood
+    // Personalised feed - ranked by expiry urgency first, then relevance, value, and likelihood
     return generateRecommendedFeed(
       mapOffersToRecommendationOffers(rewards),
       recommendationProfile,
@@ -70,7 +71,7 @@ export default function RewardsScreen() {
 
   return (
     <div className="screen-wrap bg-transparent pb-28">
-      <header className="sticky top-0 z-20 border-b border-white/60 bg-[rgba(252,247,241,0.82)] backdrop-blur-xl">
+      <header className="sticky top-0 z-20 border-b border-white/70 bg-white/85 backdrop-blur-xl">
         <div className="screen-main px-4 py-4">
           <div className="flex items-center gap-3">
             <button
@@ -94,7 +95,8 @@ export default function RewardsScreen() {
       </header>
 
       <main className="screen-main space-y-5 px-4 py-5">
-        <section className="surface-card-strong rounded-[32px] bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.18),_transparent_34%),linear-gradient(145deg,#10252b,#146d67_54%,#e98647)] px-5 py-6 text-white">
+        <section className="surface-card-strong brand-gradient rounded-[32px] px-5 py-6 text-white">
+          <img src={whiteLogo} alt="TrafficRewards" className="mb-4 h-auto w-36 opacity-95" />
           <p className="text-xs uppercase tracking-[0.24em] text-white/65">Rewards lounge</p>
           <h2 className="mt-2 text-3xl font-bold">{unlocked.length} offers ready for you</h2>
           {nextUnlock && (
@@ -115,8 +117,8 @@ export default function RewardsScreen() {
                 onClick={() => setCategory(item)}
                 className={`rounded-full px-4 py-2 text-sm font-semibold capitalize transition-all ${
                   category === item
-                    ? 'bg-[linear-gradient(135deg,#132c32,#146d67)] text-white shadow-sm'
-                    : 'bg-[rgba(247,241,233,0.92)] text-neutral-700 hover:bg-white'
+                    ? 'bg-[var(--gradient-primary)] text-white shadow-sm'
+                    : 'bg-brand-50 text-neutral-700 hover:bg-white'
                 }`}
               >
                 {item}

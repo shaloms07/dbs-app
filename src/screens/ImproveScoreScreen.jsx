@@ -40,7 +40,7 @@ export default function ImproveScoreScreen() {
       </header>
 
       <main className="mx-auto max-w-screen-sm space-y-6 px-4 py-6">
-        <section className="rounded-3xl bg-gradient-to-br from-emerald-500 to-green-600 p-6 text-white shadow-lg">
+        <section className="brand-gradient rounded-3xl p-6 text-white shadow-lg">
           <p className="text-sm opacity-80">Current score</p>
           <h2 className="mt-1 text-5xl font-bold">
             {score.current}
@@ -54,7 +54,7 @@ export default function ImproveScoreScreen() {
         <section className="grid grid-cols-2 gap-3">
           <article className="rounded-2xl bg-white p-4 shadow-sm">
             <p className="text-sm text-neutral-500">Current streak</p>
-            <p className="mt-2 text-3xl font-bold text-orange-500">
+            <p className="mt-2 text-3xl font-bold text-brand-700">
               {score.stats.streak.currentDays}
             </p>
             <p className="text-sm text-neutral-600">days</p>
@@ -75,7 +75,7 @@ export default function ImproveScoreScreen() {
                 days until {score.nextMilestone.violationType} ages out
               </p>
             </div>
-            <p className="text-2xl font-bold text-emerald-300">
+            <p className="text-2xl font-bold text-cyan-200">
               +{score.nextMilestone.scoreGainOnExpiry}
             </p>
           </div>
@@ -84,7 +84,7 @@ export default function ImproveScoreScreen() {
         <section className="rounded-3xl bg-white p-5 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
             <h3 className="text-lg font-bold text-neutral-900">Goal progress</h3>
-            <span className="rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-700">
+            <span className="rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
               On Track
             </span>
           </div>

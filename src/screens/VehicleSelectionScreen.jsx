@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useUser } from '@context/UserContext';
+import whiteLogo from '../media/Trafficrewards Logo-White.png';
 
 export default function VehicleSelectionScreen() {
   const navigate = useNavigate();
@@ -25,11 +26,9 @@ export default function VehicleSelectionScreen() {
   return (
     <div className="screen-wrap flex items-center justify-center px-4 py-8">
       <div className="screen-main">
-        <div className="surface-card-strong overflow-hidden rounded-[32px]">
-          <div className="bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.18),_transparent_30%),linear-gradient(135deg,#132c32,#146d67_56%,#e98647)] px-6 pb-7 pt-8 text-white">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/70">
-              TrafficRewards
-            </p>
+        <div className="surface-card-strong overflow-hidden rounded-[32px] bg-white">
+          <div className="brand-gradient px-6 pb-7 pt-8 text-white">
+            <img src={whiteLogo} alt="TrafficRewards" className="h-auto w-48" />
             <h1 className="mt-4 font-display text-4xl font-bold leading-tight">
               Choose your
               <br />
@@ -54,8 +53,8 @@ export default function VehicleSelectionScreen() {
                   }}
                   className={`w-full rounded-[28px] border p-5 text-left transition ${
                     isActive
-                      ? 'border-brand-500 bg-brand-50 shadow-[0_14px_28px_rgba(20,109,103,0.14)]'
-                      : 'border-neutral-200 bg-white hover:border-brand-300 hover:bg-[rgba(248,243,236,0.82)]'
+                      ? 'border-brand-500 bg-brand-50 shadow-[0_14px_28px_rgba(0,88,209,0.14)]'
+                      : 'border-neutral-200 bg-white hover:border-brand-300 hover:bg-brand-50'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">

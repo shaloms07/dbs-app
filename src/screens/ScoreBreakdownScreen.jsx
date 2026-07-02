@@ -84,7 +84,7 @@ export default function ScoreBreakdownScreen() {
                   <p className="font-semibold text-neutral-900">{projection.scenario}</p>
                   <p className="text-sm text-neutral-500">{projection.daysFromNow} days</p>
                 </div>
-                <p className="font-bold text-green-600">+{projection.scoreGain} pts</p>
+                <p className="font-bold text-brand-700">+{projection.scoreGain} pts</p>
               </div>
             ))}
           </div>

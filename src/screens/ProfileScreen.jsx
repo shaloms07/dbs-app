@@ -7,6 +7,7 @@ import { useUser } from '@context/UserContext';
 import { getBand } from '@constants/scoreBands';
 import { useScore } from '@hooks/useScore';
 import { formatDateIN, maskString } from '@utils/formatters';
+import whiteLogo from '../media/Trafficrewards Logo-White.png';
 
 export default function ProfileScreen() {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ export default function ProfileScreen() {
 
   return (
     <div className="screen-wrap bg-transparent pb-28">
-      <header className="sticky top-0 z-20 border-b border-white/60 bg-[rgba(252,247,241,0.82)] backdrop-blur-xl">
+      <header className="sticky top-0 z-20 border-b border-white/70 bg-white/85 backdrop-blur-xl">
         <div className="screen-main px-4 py-4">
           <div className="flex items-center gap-3">
             <button
@@ -48,7 +49,9 @@ export default function ProfileScreen() {
 
       <main className="screen-main space-y-5 px-4 py-5">
         <section className="surface-card-strong overflow-hidden rounded-[32px]">
-          <div className="h-28 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.22),_transparent_30%),linear-gradient(135deg,#10252b,#146d67_56%,#d8c27b)]" />
+          <div className="brand-gradient flex h-28 items-start px-5 py-5">
+            <img src={whiteLogo} alt="TrafficRewards" className="h-auto w-36 opacity-95" />
+          </div>
           <div className="px-5 pb-6">
             <div className="-mt-8 flex items-end gap-4">
               <div className="flex h-24 w-24 items-center justify-center rounded-[28px] border-4 border-white bg-brand-100 text-3xl font-bold text-brand-700 shadow-sm">
@@ -68,7 +71,7 @@ export default function ProfileScreen() {
           <DetailRow label="Mobile" value={`+91 ${maskString(user.mobile, 2, 2)}`} />
           <DetailRow label="Licence number" value={maskString(user.licence.number, 4, 4)} />
           <DetailRow label="Licence expiry" value={formatDateIN(user.licence.expiryDate)} />
-          <div className="flex items-center justify-between rounded-[22px] bg-[rgba(248,243,236,0.92)] px-4 py-3">
+          <div className="flex items-center justify-between rounded-[22px] bg-brand-50 px-4 py-3">
             <span className="text-sm text-neutral-500">DBS band</span>
             <Badge color={badgeColor}>{band.label}</Badge>
           </div>
@@ -78,7 +81,7 @@ export default function ProfileScreen() {
           {user.vehicles.map((vehicle) => (
             <div
               key={vehicle.id}
-              className="rounded-[24px] border border-neutral-200 bg-[rgba(248,243,236,0.92)] p-4"
+              className="rounded-[24px] border border-brand-100 bg-brand-50/80 p-4"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -144,7 +147,7 @@ function DetailCard({ title, children }) {
 
 function DetailRow({ label, value }) {
   return (
-    <div className="flex items-center justify-between rounded-[22px] bg-[rgba(248,243,236,0.92)] px-4 py-3">
+    <div className="flex items-center justify-between rounded-[22px] bg-brand-50 px-4 py-3">
       <span className="text-sm text-neutral-500">{label}</span>
       <span className="text-sm font-semibold text-neutral-900">{value}</span>
     </div>

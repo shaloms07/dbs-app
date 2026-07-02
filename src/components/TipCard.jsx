@@ -2,10 +2,10 @@ import PropTypes from 'prop-types';
 
 const CATEGORY_STYLES = {
   signal: 'border-red-400 bg-red-50',
-  helmet: 'border-amber-400 bg-amber-50',
-  speed: 'border-orange-400 bg-orange-50',
-  phone: 'border-blue-400 bg-blue-50',
-  seatbelt: 'border-emerald-400 bg-emerald-50',
+  helmet: 'border-cyan-400 bg-cyan-50',
+  speed: 'border-brand-500 bg-brand-50',
+  phone: 'border-brand-500 bg-brand-50',
+  seatbelt: 'border-brand-600 bg-brand-50',
   other: 'border-neutral-400 bg-neutral-50',
 };
 

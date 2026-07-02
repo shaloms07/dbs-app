@@ -12,8 +12,8 @@ export default function RewardCard({ reward, userScore = 0, onRedeemTap, onLocke
     <article
       className={`relative overflow-hidden rounded-[28px] border transition-all ${
         reward.isUnlocked
-          ? 'border-brand-100 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(245,251,249,0.92))] shadow-[0_16px_30px_rgba(26,36,40,0.08)] hover:shadow-[0_18px_34px_rgba(26,36,40,0.12)]'
-          : 'border-neutral-200 bg-[rgba(249,245,239,0.92)]'
+          ? 'border-brand-100 brand-gradient-soft shadow-[0_16px_30px_rgba(0,40,96,0.08)] hover:shadow-[0_18px_34px_rgba(0,40,96,0.12)]'
+          : 'border-neutral-200 bg-neutral-50'
       }`}
     >
       {isDevelopment && Number.isFinite(reward.score) && (
@@ -22,7 +22,7 @@ export default function RewardCard({ reward, userScore = 0, onRedeemTap, onLocke
         </div>
       )}
 
-      <div className="border-b border-neutral-200/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(244,238,231,0.92))] p-3">
+      <div className="border-b border-neutral-200/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(238,246,255,0.92))] p-3">
         <div className="overflow-hidden rounded-[22px] bg-white">
           <img
             src={reward.cardImageUrl}
@@ -70,11 +70,11 @@ export default function RewardCard({ reward, userScore = 0, onRedeemTap, onLocke
           <div>
             <div className="mb-1 flex items-center justify-between text-xs">
               <span className="text-neutral-500">Progress to unlock</span>
-              <span className="font-semibold text-amber-700">{reward.pointsNeeded} pts to go</span>
+              <span className="font-semibold text-brand-700">{reward.pointsNeeded} pts to go</span>
             </div>
             <div className="h-2 overflow-hidden rounded-full bg-neutral-200">
               <div
-                className="h-full bg-[linear-gradient(90deg,#d95d39,#e98647_45%,#1f8f80)]"
+                className="h-full bg-[var(--gradient-primary)]"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -85,7 +85,7 @@ export default function RewardCard({ reward, userScore = 0, onRedeemTap, onLocke
           {reward.isUnlocked ? (
             <button
               onClick={() => onRedeemTap?.(reward)}
-              className="rounded-lg bg-[linear-gradient(135deg,#132c32,#146d67)] px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-95"
+              className="rounded-lg bg-[var(--gradient-primary)] px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-95"
             >
               Redeem
             </button>

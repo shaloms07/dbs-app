@@ -147,7 +147,7 @@ function RedeemRewardModal({ reward }) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-start gap-4 rounded-[24px] bg-[rgba(248,243,236,0.72)] p-3">
+      <div className="flex items-start gap-4 rounded-[24px] bg-brand-50 p-3">
         <img
           src={reward?.cardImageUrl}
           alt={`${reward?.brand} offer`}
@@ -184,7 +184,7 @@ function ConfirmRedeemModal({ reward }) {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-start gap-4 rounded-[24px] bg-[rgba(248,243,236,0.72)] p-3">
+      <div className="flex items-start gap-4 rounded-[24px] bg-brand-50 p-3">
         <img
           src={reward?.cardImageUrl}
           alt={`${reward?.brand} offer`}
@@ -205,7 +205,7 @@ function ConfirmRedeemModal({ reward }) {
         description="Once you confirm, we’ll reveal the redemption details for this offer."
       />
 
-      <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4">
+      <div className="rounded-2xl border border-brand-100 bg-brand-50 p-4">
         <div className="flex items-center justify-between text-sm text-neutral-700">
           <span>Category</span>
           <span className="font-semibold capitalize">{reward?.category}</span>
@@ -217,8 +217,8 @@ function ConfirmRedeemModal({ reward }) {
           </span>
         </div>
         {summary.confirmationPinRequired && (
-          <div className="mt-3 rounded-xl border border-amber-200 bg-white p-3">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-amber-700">
+          <div className="mt-3 rounded-xl border border-brand-100 bg-white p-3">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-700">
               Confirmation PIN
             </p>
             <input
@@ -248,7 +248,7 @@ function ConfirmRedeemModal({ reward }) {
         </button>
         <button
           onClick={handleConfirm}
-          className="rounded-2xl bg-[linear-gradient(135deg,#132c32,#146d67)] px-4 py-3 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-95"
+          className="rounded-2xl bg-[var(--gradient-primary)] px-4 py-3 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-95"
         >
           Confirm redeem
         </button>
@@ -264,7 +264,7 @@ function LockedRewardModal({ reward }) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-start gap-4 rounded-[24px] bg-[rgba(248,243,236,0.72)] p-3">
+      <div className="flex items-start gap-4 rounded-[24px] bg-brand-50 p-3">
         <img
           src={reward?.cardImageUrl}
           alt={`${reward?.brand} offer`}
@@ -328,7 +328,7 @@ function FulfillmentPanel({ reward, summary, code }) {
           href={summary.fulfillmentLink}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex w-full items-center justify-center rounded-xl bg-[linear-gradient(135deg,#132c32,#146d67)] px-4 py-3 text-sm font-semibold text-white"
+          className="inline-flex w-full items-center justify-center rounded-xl bg-[var(--gradient-primary)] px-4 py-3 text-sm font-semibold text-white"
         >
           Open partner link
         </a>

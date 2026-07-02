@@ -43,16 +43,18 @@ export default function ScoreGauge({ score = 0, animated = true, size = 280, sho
       >
         <defs>
           <linearGradient id="gradientArc" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#d95d39" stopOpacity="0.35" />
-            <stop offset="35%" stopColor="#e98647" stopOpacity="0.34" />
-            <stop offset="68%" stopColor="#b9c96b" stopOpacity="0.34" />
-            <stop offset="100%" stopColor="#1f8f80" stopOpacity="0.35" />
+            <stop offset="0%" stopColor="#DC2626" stopOpacity="0.35" />
+            <stop offset="25%" stopColor="#F97316" stopOpacity="0.34" />
+            <stop offset="50%" stopColor="#EAB308" stopOpacity="0.34" />
+            <stop offset="75%" stopColor="#65A30D" stopOpacity="0.34" />
+            <stop offset="100%" stopColor="#16A34A" stopOpacity="0.35" />
           </linearGradient>
           <linearGradient id="activeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#d95d39" />
-            <stop offset="35%" stopColor="#e98647" />
-            <stop offset="68%" stopColor="#b9c96b" />
-            <stop offset="100%" stopColor="#1f8f80" />
+            <stop offset="0%" stopColor="#DC2626" />
+            <stop offset="25%" stopColor="#F97316" />
+            <stop offset="50%" stopColor="#EAB308" />
+            <stop offset="75%" stopColor="#65A30D" />
+            <stop offset="100%" stopColor="#16A34A" />
           </linearGradient>
         </defs>
 
@@ -133,7 +135,7 @@ export default function ScoreGauge({ score = 0, animated = true, size = 280, sho
               y="146"
               textAnchor="middle"
               fontSize="13"
-              fill="rgba(248,240,228,0.88)"
+              fill="rgba(255,255,255,0.88)"
               fontFamily="Nunito, sans-serif"
             >
               /{SCORE_MAX}

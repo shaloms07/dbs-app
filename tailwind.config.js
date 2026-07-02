@@ -9,22 +9,25 @@ export default {
       },
       colors: {
         brand: {
-          50: '#eef7f5',
-          100: '#d8ece8',
-          500: '#19857d',
-          600: '#146d67',
-          700: '#114f4b',
-          900: '#132c32',
+          50: '#eef6ff',
+          100: '#d9eaff',
+          200: '#b8d7ff',
+          300: '#7fb9ff',
+          500: '#1468F4',
+          600: '#0058D1',
+          700: '#0048ad',
+          800: '#003a8a',
+          900: '#273471',
         },
         score: {
           poor: '#d95d39',
-          below: '#e98647',
-          average: '#d9b75f',
-          good: '#4a7db4',
-          excellent: '#1f8f80',
+          below: '#f59e0b',
+          average: '#00D3FF',
+          good: '#1468F4',
+          excellent: '#0058D1',
         },
-        success: '#1f8f80',
-        warning: '#d9b75f',
+        success: '#0058D1',
+        warning: '#00D3FF',
         error: '#d95d39',
         neutral: {
           50: '#f8fafc',
@@ -49,11 +52,11 @@ export default {
       },
       keyframes: {
         slideUp: {
-          'from': { transform: 'translateY(100%)' },
-          'to': { transform: 'translateY(0)' },
+          from: { transform: 'translateY(100%)' },
+          to: { transform: 'translateY(0)' },
         },
       },
     },
   },
   plugins: [],
-}
+};
