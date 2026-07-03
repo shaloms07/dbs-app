@@ -248,9 +248,9 @@ function ConfirmRedeemModal({ reward }) {
         </button>
         <button
           onClick={handleConfirm}
-          className="rounded-2xl bg-[var(--gradient-primary)] px-4 py-3 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-95"
+          className="rounded-full bg-brand-600 px-6 py-2.5 text-sm font-bold text-white shadow-md transition-all hover:bg-brand-700 hover:scale-[1.02] active:scale-[0.98] hover:shadow-lg"
         >
-          Confirm redeem
+          Confirm Redeem
         </button>
       </div>
     </div>
