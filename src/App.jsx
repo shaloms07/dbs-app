@@ -18,6 +18,7 @@ const ScoreBreakdownScreen = lazy(() => import('@screens/ScoreBreakdownScreen'))
 const RewardsScreen = lazy(() => import('@screens/RewardsScreen'));
 const ProfileScreen = lazy(() => import('@screens/ProfileScreen'));
 const ImproveScoreScreen = lazy(() => import('@screens/ImproveScoreScreen'));
+const InsuranceScreen = lazy(() => import('@screens/InsuranceScreen'));
 
 function AppRoutes() {
   const { isAuthenticated, loading } = useUser();
@@ -42,6 +43,7 @@ function AppRoutes() {
             <Route path="/vehicle-select" element={<VehicleSelectionScreen />} />
             <Route path="/score" element={<ScoreBreakdownScreen />} />
             <Route path="/rewards" element={<RewardsScreen />} />
+            <Route path="/insurance" element={<InsuranceScreen />} />
             <Route path="/profile" element={<ProfileScreen />} />
             <Route path="/improve" element={<ImproveScoreScreen />} />
             <Route path="*" element={<Navigate to="/home" replace />} />

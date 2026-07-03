@@ -43,7 +43,7 @@ export default function RewardCard({ reward, userScore = 0, onRedeemTap, onLocke
               {reward.offerTitle}
             </h3>
           </div>
-          <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-neutral-700 shadow-sm">
+          <span className="rounded-full bg-black px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white shadow-sm">
             {reward.category}
           </span>
         </div>
@@ -85,14 +85,14 @@ export default function RewardCard({ reward, userScore = 0, onRedeemTap, onLocke
           {reward.isUnlocked ? (
             <button
               onClick={() => onRedeemTap?.(reward)}
-              className="rounded-lg bg-[var(--gradient-primary)] px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-95"
+              className="rounded-full bg-brand-600 px-6 py-2.5 text-sm font-bold text-white shadow-md transition-all hover:bg-brand-700 hover:scale-[1.02] active:scale-[0.98] hover:shadow-lg"
             >
               Redeem
             </button>
           ) : (
             <button
               onClick={() => onLockedTap?.(reward)}
-              className="rounded-lg bg-neutral-200 px-4 py-2.5 text-sm font-semibold text-neutral-700 transition-colors hover:bg-neutral-300"
+              className="rounded-full border border-neutral-200 bg-neutral-100 px-5 py-2.5 text-sm font-semibold text-neutral-700 transition-all hover:bg-neutral-200 hover:text-neutral-900"
             >
               View details
             </button>

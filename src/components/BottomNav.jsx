@@ -4,6 +4,7 @@ const TAB_CONFIG = [
   { id: 'home', path: '/home', icon: '🏠', label: 'Home' },
   { id: 'score', path: '/score', icon: '📊', label: 'Score' },
   { id: 'rewards', path: '/rewards', icon: '🎁', label: 'Rewards' },
+  { id: 'insurance', path: '/insurance', icon: '🛡️', label: 'Insurance' },
   { id: 'profile', path: '/profile', icon: '👤', label: 'Profile' },
 ];
 
@@ -13,7 +14,7 @@ export default function BottomNav() {
 
   return (
     <nav className="fixed bottom-4 left-1/2 z-[80] w-[calc(100%-1.5rem)] -translate-x-1/2 md:bottom-5 md:w-[26rem]">
-      <div className="grid grid-cols-4 rounded-[28px] border border-white/80 bg-white/95 p-2 shadow-[0_24px_56px_rgba(0,40,96,0.18)] backdrop-blur-2xl">
+      <div className="grid grid-cols-5 rounded-[28px] border border-white/80 bg-white/95 p-2 shadow-[0_24px_56px_rgba(0,40,96,0.18)] backdrop-blur-2xl">
         {TAB_CONFIG.map((tab) => {
           const active = location.pathname.startsWith(tab.path);
           return (

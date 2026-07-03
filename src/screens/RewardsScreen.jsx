@@ -117,8 +117,8 @@ export default function RewardsScreen() {
                 onClick={() => setCategory(item)}
                 className={`rounded-full px-4 py-2 text-sm font-semibold capitalize transition-all ${
                   category === item
-                    ? 'bg-[var(--gradient-primary)] text-white shadow-sm'
-                    : 'bg-brand-50 text-neutral-700 hover:bg-white'
+                    ? 'bg-brand-600 text-white shadow-md'
+                    : 'bg-brand-50 text-brand-700 hover:bg-brand-100'
                 }`}
               >
                 {item}
