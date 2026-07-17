@@ -29,7 +29,7 @@ describe('rewardFulfillment', () => {
     const offlineReward = mockRewards.find((item) => item.id === 'reward-005');
     const onlineReward = mockRewards.find((item) => item.id === 'reward-024');
 
-    expect(getRewardFulfillmentSummary(offlineReward).fulfillmentLabel).toBe('Offline');
-    expect(getRewardFulfillmentSummary(onlineReward).fulfillmentLabel).toBe('Online');
+    expect(getRewardFulfillmentSummary(offlineReward).fulfillmentLabel).toBe('Confirmation PIN');
+    expect(getRewardFulfillmentSummary(onlineReward).fulfillmentLabel).toBe('Link');
   });
 });

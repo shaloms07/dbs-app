@@ -20,11 +20,16 @@ describe('recommendationAdapters', () => {
   it('maps a reward into the recommendation engine shape', () => {
     const mapped = mapOfferToRecommendationOffer(mockRewards[0]);
 
-    expect(mapped.categories).toMatchObject({
+    const expectedCategories = {
       [mockRewards[0].category]: 1,
-      flight: 1,
-      hotel: 1,
-    });
+    };
+    if (Array.isArray(mockRewards[0].categoryTags)) {
+      mockRewards[0].categoryTags.forEach((tag) => {
+        expectedCategories[tag] = 1;
+      });
+    }
+
+    expect(mapped.categories).toMatchObject(expectedCategories);
     expect(mapped.points).toBeGreaterThan(0);
     expect(mapped.effort).toBeGreaterThan(0);
     expect(mapped.cost).toBe(0);

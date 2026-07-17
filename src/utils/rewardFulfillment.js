@@ -448,6 +448,53 @@ function deriveBaseFulfillment(reward) {
   };
 }
 
+function mapOldToNewRedemptionMethod(fulfillmentType) {
+  if (fulfillmentType === 'coupon' || fulfillmentType === 'Coupon') return 'Coupon';
+  if (
+    fulfillmentType === 'link' ||
+    fulfillmentType === 'Link' ||
+    fulfillmentType === 'online' ||
+    fulfillmentType === 'Online'
+  )
+    return 'Link';
+  if (fulfillmentType === 'coupon-link' || fulfillmentType === 'Coupon + Link')
+    return 'Coupon + Link';
+  if (fulfillmentType === 'coupon-pin' || fulfillmentType === 'Coupon + PIN') return 'Coupon + PIN';
+  if (
+    fulfillmentType === 'offline' ||
+    fulfillmentType === 'confirmation-pin' ||
+    fulfillmentType === 'Confirmation PIN'
+  )
+    return 'Confirmation PIN';
+  return 'Coupon';
+}
+
+function mapOldLocationScopeToNationalLocal(locationScope) {
+  if (locationScope === 'local' || locationScope === 'state' || locationScope === 'Local')
+    return 'Local';
+  return 'National';
+}
+
+function mapOldToOnlineOffline(fulfillmentType, locationScope) {
+  if (locationScope === 'online' || locationScope === 'Online') return 'Online';
+  if (
+    fulfillmentType === 'offline' ||
+    locationScope === 'local' ||
+    fulfillmentType === 'Confirmation PIN'
+  )
+    return 'Offline';
+  return 'Online';
+}
+
+function buildConfirmationPin(reward, user) {
+  const seed = `${reward?.id || 'reward'}:${user?.id || user?.mobile || 'user'}:pin`;
+  let hash = 0;
+  for (let index = 0; index < seed.length; index += 1) {
+    hash = (hash * 31 + seed.charCodeAt(index)) >>> 0;
+  }
+  return String(1000 + (hash % 9000));
+}
+
 function buildDynamicCouponCode(reward, user) {
   const seed = `${reward?.id || 'reward'}:${user?.id || user?.mobile || user?.activeRegistrationNumber || 'guest'}`;
   let hash = 0;
@@ -463,26 +510,133 @@ export function enrichRewardFulfillment(reward) {
   const base = deriveBaseFulfillment(reward);
   const override = REWARD_FULFILLMENT_OVERRIDES[reward?.id] ?? {};
 
-  return {
+  const maxUseLimit = clampInteger(override.maxUseLimit ?? base.maxUseLimit, 1, 99);
+  const renewAfterDays =
+    override.renewAfterDays === null || override.renewAfterDays === undefined
+      ? base.renewAfterDays
+      : clampInteger(override.renewAfterDays, 1, 365);
+  const requiresConfirmation = normalizeBoolean(
+    override.requiresConfirmation ?? base.requiresConfirmation
+  );
+  const confirmationPinRequired = normalizeBoolean(
+    override.confirmationPinRequired ?? base.confirmationPinRequired
+  );
+
+  const rawMethod =
+    override.redemptionMethod ??
+    reward?.redemptionMethod ??
+    override.fulfillmentType ??
+    base.fulfillmentType;
+  const redemptionMethod = mapOldToNewRedemptionMethod(rawMethod);
+
+  const rawCouponType =
+    override.couponType ?? reward?.couponType ?? override.couponMode ?? base.couponMode;
+  const couponType =
+    rawCouponType === 'dynamic' || rawCouponType === 'Dynamic' ? 'Dynamic' : 'Static';
+
+  const nationalLocal =
+    override.nationalLocal ??
+    reward?.nationalLocal ??
+    mapOldLocationScopeToNationalLocal(reward?.locationScope);
+  const onlineOffline =
+    override.onlineOffline ??
+    reward?.onlineOffline ??
+    mapOldToOnlineOffline(override.fulfillmentType ?? base.fulfillmentType, reward?.locationScope);
+
+  const minimumDriverScore =
+    override.minimumDriverScore ?? reward?.minimumDriverScore ?? reward?.minimumScore ?? 0;
+  const validity = override.validity ?? reward?.validity ?? reward?.expiresAt ?? '';
+  const offerStatus = override.offerStatus ?? reward?.offerStatus ?? reward?.status ?? 'Active';
+
+  const couponCode =
+    override.couponCode ??
+    reward?.couponCode ??
+    override.redemptionValue ??
+    reward?.redemptionValue ??
+    '';
+  const redemptionLink =
+    override.redemptionLink ??
+    reward?.redemptionLink ??
+    override.fulfillmentLink ??
+    base.fulfillmentLink ??
+    '';
+  const redemptionPin =
+    override.redemptionPin ??
+    reward?.redemptionPin ??
+    override.confirmationPin ??
+    base.confirmationPin ??
+    '';
+  const confirmationPin =
+    override.confirmationPin ?? reward?.confirmationPin ?? override.confirmationPin ?? '';
+
+  const offerName = override.offerName ?? reward?.offerName ?? reward?.offerTitle ?? '';
+  const partner = override.partner ?? reward?.partner ?? reward?.brand ?? '';
+  const description = override.description ?? reward?.description ?? reward?.offerCondition ?? '';
+  const termsAndConditions =
+    override.termsAndConditions ?? reward?.termsAndConditions ?? reward?.offerCondition ?? '';
+  const brandLogo = override.brandLogo ?? reward?.brandLogoUrl ?? reward?.brandLogo ?? '';
+  const bannerImage = override.bannerImage ?? reward?.cardImageUrl ?? reward?.bannerImage ?? '';
+
+  // Extract reward value
+  let rewardValue = override.rewardValue ?? reward?.rewardValue ?? '';
+  if (!rewardValue && offerName) {
+    const match = offerName.match(/worth\s+Rs\s+\d+|Rs\s+\d+\s+off|Free\s+\w+/i);
+    rewardValue = match ? match[0] : 'Exclusive Benefit';
+  }
+
+  const enriched = {
     ...reward,
     ...base,
     ...override,
-    maxUseLimit: clampInteger(override.maxUseLimit ?? base.maxUseLimit, 1, 99),
-    renewAfterDays:
-      override.renewAfterDays === null || override.renewAfterDays === undefined
-        ? base.renewAfterDays
-        : clampInteger(override.renewAfterDays, 1, 365),
-    requiresConfirmation: normalizeBoolean(
-      override.requiresConfirmation ?? base.requiresConfirmation
-    ),
-    confirmationPinRequired: normalizeBoolean(
-      override.confirmationPinRequired ?? base.confirmationPinRequired
-    ),
-    confirmationPin: override.confirmationPin ?? base.confirmationPin ?? '',
-    fulfillmentLink: override.fulfillmentLink ?? base.fulfillmentLink ?? '',
-    couponMode: override.couponMode ?? base.couponMode,
-    fulfillmentType: override.fulfillmentType ?? base.fulfillmentType,
+
+    // Future-Ready Data Model fields
+    offerName,
+    partner,
+    category: reward?.category ?? '',
+    description,
+    rewardValue,
+    redemptionMethod,
+    couponType,
+    couponCode,
+    redemptionLink,
+    redemptionPin,
+    confirmationPin,
+    nationalLocal,
+    onlineOffline,
+    minimumDriverScore,
+    offerStatus,
+    validity,
+    termsAndConditions,
+    brandLogo,
+    bannerImage,
+
+    // Backward Compatibility fields
+    brand: partner,
+    offerTitle: offerName,
+    offerCondition: description,
+    cardImageUrl: bannerImage,
+    brandLogoUrl: brandLogo,
+    expiresAt: validity,
+    minimumScore: minimumDriverScore,
+    fulfillmentType:
+      redemptionMethod === 'Coupon'
+        ? 'coupon'
+        : redemptionMethod === 'Link'
+          ? 'link'
+          : redemptionMethod === 'Coupon + Link'
+            ? 'coupon-link'
+            : redemptionMethod === 'Coupon + PIN'
+              ? 'coupon-pin'
+              : 'offline',
+    couponMode: couponType === 'Dynamic' ? 'dynamic' : 'static',
+    fulfillmentLink: redemptionLink,
+    maxUseLimit,
+    renewAfterDays,
+    requiresConfirmation,
+    confirmationPinRequired,
   };
+
+  return enriched;
 }
 
 export function enrichRewardCatalog(rewards) {
@@ -490,30 +644,37 @@ export function enrichRewardCatalog(rewards) {
 }
 
 export function getRewardFulfillmentLabel(reward) {
-  const type = reward?.fulfillmentType || 'coupon';
-  if (type === 'coupon-link') return 'Coupon + Link';
-  if (type === 'coupon-pin') return 'Coupon + Pin';
-  return type.charAt(0).toUpperCase() + type.slice(1);
+  return (
+    reward?.redemptionMethod || mapOldToNewRedemptionMethod(reward?.fulfillmentType || 'coupon')
+  );
 }
 
 export function getRewardCouponValue(reward, user) {
-  if (reward?.couponMode === 'dynamic') {
+  if (reward?.couponType === 'Dynamic' || reward?.couponMode === 'dynamic') {
     return buildDynamicCouponCode(reward, user);
   }
 
-  return reward?.redemptionValue || reward?.couponCode || reward?.redemptionCode || 'TRCODE123';
+  return reward?.couponCode || reward?.redemptionValue || reward?.redemptionCode || 'TRCODE123';
 }
 
 export function getRewardFulfillmentSummary(reward, user) {
+  const couponMode =
+    reward?.couponType === 'Dynamic' || reward?.couponMode === 'dynamic' ? 'dynamic' : 'static';
+  const couponValue = getRewardCouponValue(reward, user);
+  const confPin =
+    reward?.confirmationPin ||
+    (reward?.redemptionMethod === 'Confirmation PIN' ? buildConfirmationPin(reward, user) : '');
+
   return {
     fulfillmentLabel: getRewardFulfillmentLabel(reward),
-    couponMode: reward?.couponMode || 'static',
-    couponValue: getRewardCouponValue(reward, user),
+    couponMode,
+    couponValue,
     maxUseLimit: reward?.maxUseLimit ?? 1,
     renewAfterDays: reward?.renewAfterDays ?? null,
     requiresConfirmation: Boolean(reward?.requiresConfirmation),
     confirmationPinRequired: Boolean(reward?.confirmationPinRequired),
-    confirmationPin: reward?.confirmationPin || '',
-    fulfillmentLink: reward?.fulfillmentLink || '',
+    confirmationPin: confPin,
+    redemptionPin: reward?.redemptionPin || '5821',
+    fulfillmentLink: reward?.redemptionLink || reward?.fulfillmentLink || '',
   };
 }

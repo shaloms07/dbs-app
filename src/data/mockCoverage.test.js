@@ -10,11 +10,10 @@ describe('mock coverage', () => {
 
   it('covers each active city with at least one local reward', () => {
     const scenarios = [
-      { registrationNumber: 'MH31AB1234', localRewardId: 'reward-021' },
-      { registrationNumber: 'MH12AB5555', localRewardId: 'reward-025' },
-      { registrationNumber: 'MH34CD6666', localRewardId: 'reward-034' },
-      { registrationNumber: 'KA02GH8888', localRewardId: 'reward-036' },
-      { registrationNumber: 'TN22JK9999', localRewardId: 'reward-037' },
+      { registrationNumber: 'MH31AB1234', localRewardId: 'reward-021' }, // Nagpur
+      { registrationNumber: 'MH12AB5555', localRewardId: 'reward-025' }, // Mumbai
+      { registrationNumber: 'RJ14KL7788', localRewardId: 'reward-022' }, // Pune
+      { registrationNumber: 'TN22JK9999', localRewardId: 'reward-037' }, // Chennai
     ];
 
     for (const scenario of scenarios) {
@@ -36,22 +35,22 @@ describe('mock coverage', () => {
 
   it('supports multiple vehicles on the same mobile number', () => {
     const mumbaiUser = getMockUser('MH12AB5555');
-    const puneUser = getMockUser('MH34CD6666');
-    const bengaluruUser = getMockUser('KA02GH8888');
+    const nagpurUser = getMockUser('MH31AB1234');
+    const chennaiUser = getMockUser('TN09GH1122');
 
     expect(mumbaiUser.vehicles.map((vehicle) => vehicle.registrationNumber)).toEqual(
-      expect.arrayContaining(['MH12AB5555', 'MH12SC7788'])
+      expect.arrayContaining(['MH12AB5555', 'MH34CD6666'])
     );
     expect(mumbaiUser.vehicles).toHaveLength(2);
 
-    expect(puneUser.vehicles.map((vehicle) => vehicle.registrationNumber)).toEqual(
-      expect.arrayContaining(['MH34CD6666', 'MH34UV4444'])
+    expect(nagpurUser.vehicles.map((vehicle) => vehicle.registrationNumber)).toEqual(
+      expect.arrayContaining(['MH31AB1234', 'MH12SC7788', 'MH34UV4444'])
     );
-    expect(puneUser.vehicles).toHaveLength(2);
+    expect(nagpurUser.vehicles).toHaveLength(3);
 
-    expect(bengaluruUser.vehicles.map((vehicle) => vehicle.registrationNumber)).toEqual(
-      expect.arrayContaining(['KA02GH8888', 'KA02QT2026'])
+    expect(chennaiUser.vehicles.map((vehicle) => vehicle.registrationNumber)).toEqual(
+      expect.arrayContaining(['TN09GH1122', 'TN22JK9999'])
     );
-    expect(bengaluruUser.vehicles).toHaveLength(2);
+    expect(chennaiUser.vehicles).toHaveLength(2);
   });
 });

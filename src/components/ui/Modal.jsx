@@ -4,8 +4,8 @@ import { useUI } from '@context/UIContext';
 import { useUser } from '@context/UserContext';
 import { useRewardInteractions } from '@hooks/useRewardInteractions';
 import { useScore } from '@hooks/useScore';
-import { getRewardFulfillmentSummary } from '@utils/rewardFulfillment';
-import ProgressBar from './ProgressBar';
+import { getRewardFulfillmentSummary, getRewardFulfillmentLabel } from '@utils/rewardFulfillment';
+import SafeRewardImage from './SafeRewardImage';
 
 export default function Modal() {
   const { activeModal, closeModal, modalData } = useUI();
@@ -148,10 +148,13 @@ function RedeemRewardModal({ reward }) {
   return (
     <div className="space-y-4">
       <div className="flex items-start gap-4 rounded-[24px] bg-brand-50 p-3">
-        <img
-          src={reward?.cardImageUrl}
+        <SafeRewardImage
+          src={reward?.cardImageUrl || reward?.bannerImage}
           alt={`${reward?.brand} offer`}
+          brand={reward?.brand}
+          category={reward?.category}
           className="h-24 w-24 flex-none rounded-[18px] bg-white object-contain"
+          containerClassName="h-24 w-24 flex-none rounded-[18px]"
         />
         <div className="min-w-0 pt-1">
           <h2 className="text-2xl font-bold text-neutral-900">{reward?.brand}</h2>
@@ -185,10 +188,13 @@ function ConfirmRedeemModal({ reward }) {
   return (
     <div className="space-y-5">
       <div className="flex items-start gap-4 rounded-[24px] bg-brand-50 p-3">
-        <img
-          src={reward?.cardImageUrl}
+        <SafeRewardImage
+          src={reward?.cardImageUrl || reward?.bannerImage}
           alt={`${reward?.brand} offer`}
+          brand={reward?.brand}
+          category={reward?.category}
           className="h-24 w-24 flex-none rounded-[18px] bg-white object-contain"
+          containerClassName="h-24 w-24 flex-none rounded-[18px]"
         />
         <div className="min-w-0 pt-1">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-600">
@@ -259,88 +265,198 @@ function ConfirmRedeemModal({ reward }) {
 
 function LockedRewardModal({ reward }) {
   const { score } = useScore();
-  const currentScore = score?.current ?? 0;
+  const regNum = reward?.applicableRegistrationNumber;
+  let currentScore = score?.userScore ?? score?.current ?? 0;
+  let isVehicleSpecific = false;
+
+  if (regNum) {
+    const vehicleScore = score?.vehicleScores?.[regNum.trim().toUpperCase()];
+    if (vehicleScore !== undefined) {
+      currentScore = vehicleScore;
+      isVehicleSpecific = true;
+    }
+  }
+
   const progress = Math.min((currentScore / reward.minimumScore) * 100, 100);
+  const pointsRemaining = Math.max(0, reward.minimumScore - currentScore);
 
   return (
     <div className="space-y-4">
       <div className="flex items-start gap-4 rounded-[24px] bg-brand-50 p-3">
-        <img
-          src={reward?.cardImageUrl}
+        <SafeRewardImage
+          src={reward?.cardImageUrl || reward?.bannerImage}
           alt={`${reward?.brand} offer`}
+          brand={reward?.brand}
+          category={reward?.category}
           className="h-24 w-24 flex-none rounded-[18px] bg-white object-contain"
+          containerClassName="h-24 w-24 flex-none rounded-[18px]"
         />
         <div className="min-w-0 pt-1">
           <h2 className="text-2xl font-bold text-neutral-900">This reward is locked</h2>
           <p className="mt-1 text-sm leading-6 text-neutral-600">
-            You need {reward.pointsNeeded} more points to unlock {reward.brand}.
+            {isVehicleSpecific ? (
+              <>
+                Vehicle <span className="font-mono font-bold">{regNum}</span> needs{' '}
+                <strong className="text-neutral-900 font-bold">{pointsRemaining}</strong> more
+                points to unlock {reward.brand}.
+              </>
+            ) : (
+              <>
+                You need <strong className="text-neutral-900 font-bold">{pointsRemaining}</strong>{' '}
+                more points to unlock {reward.brand}.
+              </>
+            )}
           </p>
         </div>
       </div>
-      <ProgressBar value={progress} color="#0284c7" />
-      <div className="flex justify-between text-xs text-neutral-500">
-        <span>Current: {currentScore}</span>
-        <span>Required: {reward.minimumScore}</span>
+
+      <div className="space-y-2">
+        <div className="h-2 overflow-hidden rounded-full bg-neutral-200">
+          <div className="h-full bg-brand-500 rounded-full" style={{ width: `${progress}%` }} />
+        </div>
+        <div className="flex justify-between text-xs font-semibold text-neutral-500">
+          <span>
+            {isVehicleSpecific ? (
+              <>
+                Score (<span className="font-mono font-bold text-neutral-800">{regNum}</span>):
+              </>
+            ) : (
+              <>Current Score:</>
+            )}{' '}
+            <strong className="text-neutral-800">{currentScore}</strong>
+          </span>
+          <span>
+            Required Score: <strong className="text-neutral-800">{reward.minimumScore}</strong>
+          </span>
+        </div>
+      </div>
+
+      <div className="rounded-xl bg-neutral-50 border border-neutral-200/60 p-3.5 text-xs text-neutral-600 leading-5">
+        🔒 Improving your driver score by avoiding violations and driving responsibly will
+        automatically unlock this offer. Locked rewards motivate safe driving habits!
       </div>
     </div>
   );
 }
 
 function FulfillmentPanel({ reward, summary, code }) {
-  const codeBased = ['coupon', 'coupon-link', 'coupon-pin'].includes(reward?.fulfillmentType);
+  const method = reward?.redemptionMethod || reward?.fulfillmentType || 'Coupon';
+
+  const isCoupon = [
+    'Coupon',
+    'coupon',
+    'Coupon + Link',
+    'coupon-link',
+    'Coupon + PIN',
+    'coupon-pin',
+  ].some((m) => method === m);
+  const isLink = ['Link', 'link', 'Coupon + Link', 'coupon-link'].some((m) => method === m);
+  const isPin = ['Coupon + PIN', 'coupon-pin'].some((m) => method === m);
+  const isConfirmationPin = ['Confirmation PIN', 'confirmation-pin', 'offline'].some(
+    (m) => method === m
+  );
+
+  const [copied, setCopied] = useState(false);
+  const handleCopy = (text) => {
+    navigator.clipboard?.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <div className="space-y-4 rounded-2xl border border-brand-200 bg-brand-50 p-4">
+      {/* Scope and delivery tags */}
+      <div className="flex flex-wrap gap-2 mb-2">
+        <span className="rounded-full bg-brand-100 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-700">
+          {reward.nationalLocal || 'National'}
+        </span>
+        <span className="rounded-full bg-brand-100 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-700">
+          {reward.onlineOffline || 'Online'}
+        </span>
+      </div>
+
       <div className="grid gap-3 text-sm text-neutral-700">
-        <DetailRow label="Fulfillment type" value={summary.fulfillmentLabel} />
-        <DetailRow label="Coupon mode" value={summary.couponMode} />
+        <DetailRow label="Redemption Method" value={getRewardFulfillmentLabel(reward)} />
+        <DetailRow
+          label="Coupon Type"
+          value={reward.couponType || (reward.couponMode === 'dynamic' ? 'Dynamic' : 'Static')}
+        />
         <DetailRow
           label="Max use limit"
           value={`${summary.maxUseLimit} use${summary.maxUseLimit === 1 ? '' : 's'}`}
         />
-        <DetailRow
-          label="Renew after"
-          value={summary.renewAfterDays ? `${summary.renewAfterDays} days` : 'No auto-renew'}
-        />
-        <DetailRow
-          label="Confirmation required"
-          value={summary.requiresConfirmation ? 'Yes' : 'No'}
-        />
+        {reward.rewardValue && <DetailRow label="Reward Value" value={reward.rewardValue} />}
       </div>
 
-      {codeBased && (
-        <div>
-          <p className="text-sm text-neutral-600">Redemption code</p>
-          <div className="mt-2 flex items-center justify-between rounded-xl bg-white px-4 py-3">
+      {/* 1. Coupon Display */}
+      {isCoupon && (
+        <div className="space-y-1.5 mt-2">
+          <p className="text-xs uppercase tracking-[0.14em] text-neutral-500 font-semibold">
+            Coupon Code
+          </p>
+          <div className="flex items-center justify-between rounded-xl bg-white px-4 py-3 border border-neutral-100">
             <code className="font-mono text-lg font-bold text-brand-700">{code}</code>
             <button
-              onClick={() => navigator.clipboard?.writeText(code)}
-              className="text-sm font-semibold text-brand-700"
+              onClick={() => handleCopy(code)}
+              className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-all ${
+                copied ? 'bg-emerald-500 text-white' : 'bg-brand-600 text-white hover:bg-brand-700'
+              }`}
             >
-              Copy
+              {copied ? 'Copied!' : 'Copy'}
             </button>
           </div>
         </div>
       )}
 
-      {summary.fulfillmentLink && (
-        <a
-          href={summary.fulfillmentLink}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex w-full items-center justify-center rounded-xl bg-[var(--gradient-primary)] px-4 py-3 text-sm font-semibold text-white"
-        >
-          Open partner link
-        </a>
-      )}
-
-      {reward?.fulfillmentType === 'offline' && (
-        <div className="rounded-xl bg-white px-4 py-3 text-sm text-neutral-700">
-          Show this offer at the counter or billing desk to redeem it in store.
+      {/* 2. Redemption PIN (Coupon + PIN) */}
+      {isPin && (
+        <div className="space-y-1.5 mt-2">
+          <p className="text-xs uppercase tracking-[0.14em] text-neutral-500 font-semibold">
+            Redemption PIN (Show to Merchant)
+          </p>
+          <div className="rounded-xl bg-white px-4 py-3 border border-neutral-100 text-center">
+            <code className="font-mono text-2xl font-black tracking-widest text-neutral-800">
+              {summary.redemptionPin || '5821'}
+            </code>
+            <p className="text-[10px] text-neutral-400 mt-1">
+              Merchant will verify this PIN to authorize discount
+            </p>
+          </div>
         </div>
       )}
 
-      <p className="text-xs text-neutral-500">
+      {/* 3. Confirmation PIN (Confirmation PIN) */}
+      {isConfirmationPin && (
+        <div className="space-y-1.5 mt-2">
+          <p className="text-xs uppercase tracking-[0.14em] text-neutral-500 font-semibold text-center">
+            Confirmation PIN
+          </p>
+          <div className="rounded-xl bg-amber-50 border border-amber-200 p-4 text-center space-y-2">
+            <code className="font-mono text-3xl font-black tracking-wider text-amber-700 block">
+              {summary.confirmationPin || '4920'}
+            </code>
+            <p className="text-xs font-semibold text-amber-800">
+              Please present this PIN to the merchant/cashier to complete your redemption.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* 4. Link Display (Visit Offer Button) */}
+      {isLink && summary.fulfillmentLink && (
+        <div className="pt-2">
+          <a
+            href={summary.fulfillmentLink}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex w-full items-center justify-center rounded-xl bg-brand-600 hover:bg-brand-700 px-4 py-3 text-sm font-semibold text-white transition-colors shadow-sm"
+          >
+            Visit Offer
+          </a>
+        </div>
+      )}
+
+      <p className="text-xs text-neutral-500 pt-2 border-t border-neutral-200/50 font-medium">
         Valid till {new Date(reward?.expiresAt).toLocaleDateString('en-IN')}
       </p>
     </div>

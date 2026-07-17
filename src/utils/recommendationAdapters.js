@@ -127,6 +127,8 @@ function parseCurrencyValue(value) {
   return Number.isFinite(numericValue) ? numericValue : null;
 }
 
+import { getBand } from '@constants/scoreBands';
+
 function getActiveVehicle(user) {
   if (!user) return null;
   if (user.activeVehicle) return user.activeVehicle;
@@ -145,18 +147,35 @@ function getScoreBand(score) {
 
 function deriveInterests(user, score) {
   const interests = { ...BASE_INTERESTS };
-  const activeVehicle = getActiveVehicle(user);
-  const band = getScoreBand(score);
-  const trend = score?.recentTrend || 'Stable';
 
-  if (activeVehicle?.type && VEHICLE_INTERESTS[activeVehicle.type]) {
-    for (const [category, weight] of Object.entries(VEHICLE_INTERESTS[activeVehicle.type])) {
-      interests[category] = clampInterestWeight((interests[category] ?? 0) + weight);
+  // Use all vehicles in user account to make the interest profile vehicle-independent
+  if (user?.vehicles && Array.isArray(user.vehicles) && user.vehicles.length > 0) {
+    const uniqueTypes = Array.from(new Set(user.vehicles.map((v) => v.type).filter(Boolean)));
+    for (const type of uniqueTypes) {
+      if (VEHICLE_INTERESTS[type]) {
+        for (const [category, weight] of Object.entries(VEHICLE_INTERESTS[type])) {
+          interests[category] = clampInterestWeight(
+            (interests[category] ?? 0) + weight / uniqueTypes.length
+          );
+        }
+      }
+    }
+  } else {
+    const activeVehicle = getActiveVehicle(user);
+    if (activeVehicle?.type && VEHICLE_INTERESTS[activeVehicle.type]) {
+      for (const [category, weight] of Object.entries(VEHICLE_INTERESTS[activeVehicle.type])) {
+        interests[category] = clampInterestWeight((interests[category] ?? 0) + weight);
+      }
     }
   }
 
-  if (band && BAND_INTERESTS[band]) {
-    for (const [category, weight] of Object.entries(BAND_INTERESTS[band])) {
+  // Derive band based on userScore to keep it vehicle-independent
+  const userScoreVal = score?.userScore ?? score?.current ?? 250;
+  const userBand = getBand(userScoreVal)?.label ?? getScoreBand(score);
+  const trend = score?.recentTrend || 'Stable';
+
+  if (userBand && BAND_INTERESTS[userBand]) {
+    for (const [category, weight] of Object.entries(BAND_INTERESTS[userBand])) {
       interests[category] = clampInterestWeight((interests[category] ?? 0) + weight);
     }
   }

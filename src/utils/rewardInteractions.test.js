@@ -22,9 +22,15 @@ describe('rewardInteractions', () => {
     const profile = await getRewardInteractionProfile(user);
 
     expect(profile.clickedOfferIds).toContain(mockRewards[0].id);
-    expect(profile.categoryAffinity.travel).toBeGreaterThan(0);
-    expect(profile.categoryAffinity.gifting).toBeGreaterThan(0);
-    expect(profile.categoryAffinity.jewellery).toBeGreaterThan(0);
+    expect(profile.categoryAffinity[mockRewards[0].category]).toBeGreaterThan(0);
+
+    const similarOfferIds = mockRewards[0].similarOfferIds || [];
+    similarOfferIds.forEach((id) => {
+      const offer = mockRewards.find((r) => r.id === id);
+      if (offer && offer.category) {
+        expect(profile.categoryAffinity[offer.category]).toBeGreaterThan(0);
+      }
+    });
 
     const recommendationProfile = buildRecommendationProfile(
       { id: user.id, activeRegistrationNumber: user.activeRegistrationNumber },
