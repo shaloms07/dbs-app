@@ -13,7 +13,9 @@ import { useUser } from '@context/UserContext';
 import { useRewards } from '@hooks/useRewards';
 import { useRewardInteractions } from '@hooks/useRewardInteractions';
 import { useScore } from '@hooks/useScore';
+import { useInsurance } from '@hooks/useInsurance';
 import { getGreeting } from '@utils/formatters';
+import InsuranceRenewalBanner from '@components/InsuranceRenewalBanner';
 import mainLogo from '../media/Trafficrewards Logo-Main.png';
 import whiteLogo from '../media/Trafficrewards Logo-White.png';
 import {
@@ -27,6 +29,7 @@ export default function HomeScreen() {
   const { user, activeVehicle } = useUser();
   const { score, loading: scoreLoading, error: scoreError, refetch } = useScore();
   const { rewards, loading: rewardsLoading, error: rewardsError } = useRewards(null, 1, 5, user);
+  const { insurance } = useInsurance();
   const { openModal } = useUI();
   const { interactionProfile, trackInteraction } = useRewardInteractions(user);
   const recommendationProfile = useMemo(
@@ -137,6 +140,14 @@ export default function HomeScreen() {
           vehicle={activeVehicle}
           onTap={(vehicle) => openModal('vehicle-details', vehicle)}
         />
+
+        {/* Insurance Renewal Banner */}
+        {insurance?.policy?.expiryDate && (
+          <InsuranceRenewalBanner
+            expiryDate={insurance.policy.expiryDate}
+            onViewOffers={() => navigate('/insurance')}
+          />
+        )}
 
         <section className="grid grid-cols-2 gap-3">
           <StatCard label="Clean Days" value={score.stats.cleanDays} accent="text-brand-700" />

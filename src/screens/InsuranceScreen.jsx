@@ -6,6 +6,8 @@ import ScoreGauge from '@components/ScoreGauge';
 import Badge from '@components/ui/Badge';
 import ErrorState from '@components/ui/ErrorState';
 import FullPageSpinner from '@components/ui/FullPageSpinner';
+import InAppBrowser from '@components/ui/InAppBrowser';
+import InsuranceRenewalBanner from '@components/InsuranceRenewalBanner';
 import { useUser } from '@context/UserContext';
 import { useScore } from '@hooks/useScore';
 import { useInsurance } from '@hooks/useInsurance';
@@ -346,6 +348,7 @@ export default function InsuranceScreen() {
   const { score, loading: scoreLoading, error: scoreError, refetch: refetchScore } = useScore();
   const {
     insurance,
+    insurers,
     loading: insuranceLoading,
     error: insuranceError,
     refetch: refetchInsurance,
@@ -534,6 +537,7 @@ export default function InsuranceScreen() {
             insurance={insurance}
             totalImpact={totalImpact}
             violationCount={classifiedViolations.filter((v) => !v.isAgedOut).length}
+            onViewOffers={() => setActiveTab('premium')}
           />
         )}
 
@@ -546,6 +550,8 @@ export default function InsuranceScreen() {
             currentScore={currentScore}
             vehicle={activeVehicle}
             basePremium={basePremium}
+            adjustedPremium={adjustedPremium}
+            insurers={insurers}
           />
         )}
       </main>
@@ -582,9 +588,18 @@ function OverviewTab({
   insurance,
   totalImpact,
   violationCount,
+  onViewOffers,
 }) {
   return (
     <div className="space-y-4">
+      {/* Insurance Renewal Banner */}
+      {insurance?.policy?.expiryDate && (
+        <InsuranceRenewalBanner
+          expiryDate={insurance.policy.expiryDate}
+          onViewOffers={onViewOffers}
+        />
+      )}
+
       {/* How score affects insurance */}
       <section className="surface-card rounded-[28px] p-5">
         <h3 className="text-lg font-bold text-neutral-900">How Your Score Affects Insurance</h3>
@@ -802,9 +817,14 @@ function ChallanCard({ violation, aged = false }) {
 
 // ─── Premium Tab ──────────────────────────────────────────────────────
 
-function PremiumTab({ currentScore, vehicle, basePremium }) {
+function PremiumTab({ currentScore, vehicle, basePremium, adjustedPremium, insurers = [] }) {
   return (
     <div className="space-y-4">
+      {/* Insurer Renewal Offers */}
+      {insurers.length > 0 && (
+        <InsurerOffersSection insurers={insurers} adjustedPremium={adjustedPremium} />
+      )}
+
       {/* Vehicle Classification */}
       <section className="surface-card rounded-[28px] p-5">
         <h3 className="text-lg font-bold text-neutral-900">Vehicle Classification</h3>
@@ -820,13 +840,13 @@ function PremiumTab({ currentScore, vehicle, basePremium }) {
       </section>
 
       {/* TP Premium Slab */}
-      <section className="surface-card rounded-[28px] p-5">
+      {/* <section className="surface-card rounded-[28px] p-5">
         <h3 className="text-lg font-bold text-neutral-900">TP Premium Slabs</h3>
         <p className="mt-2 text-sm leading-6 text-neutral-600">
           Third-party premiums vary by vehicle type and engine capacity (cc).
         </p>
 
-        {/* Private Car */}
+        Private Car
         <div className="mt-4">
           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-neutral-500">
             Private Car
@@ -857,7 +877,7 @@ function PremiumTab({ currentScore, vehicle, basePremium }) {
           </div>
         </div>
 
-        {/* Two Wheeler */}
+        Two Wheeler
         <div className="mt-4">
           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-neutral-500">
             Two Wheeler
@@ -888,7 +908,7 @@ function PremiumTab({ currentScore, vehicle, basePremium }) {
           </div>
         </div>
 
-        {/* Goods Vehicle */}
+        Goods Vehicle
         <div className="mt-4">
           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-neutral-500">
             Goods Vehicle (by GVW)
@@ -918,7 +938,7 @@ function PremiumTab({ currentScore, vehicle, basePremium }) {
             </table>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Premium Adjustment Table */}
       <section className="surface-card rounded-[28px] p-5">
@@ -1033,6 +1053,180 @@ function PremiumTab({ currentScore, vehicle, basePremium }) {
         </div>
       </section>
     </div>
+  );
+}
+
+// ─── Insurer Offers Section ───────────────────────────────────────────
+
+/**
+ * Logo badge: uses a colored initials circle when no real logoUrl is provided.
+ */
+function InsurerLogoBadge({ name, logoUrl, brandColor }) {
+  if (logoUrl) {
+    return (
+      <img
+        src={logoUrl}
+        alt={name}
+        className="h-12 w-12 rounded-2xl object-contain"
+        style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.06)', padding: '4px' }}
+      />
+    );
+  }
+  const initials = name
+    .split(' ')
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join('');
+  return (
+    <div
+      className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl text-sm font-extrabold text-white"
+      style={{
+        background: brandColor || '#0058D1',
+        boxShadow: `0 4px 14px ${brandColor ? brandColor + '55' : 'rgba(0,88,209,0.35)'}`,
+        letterSpacing: '0.03em',
+      }}
+      aria-label={name}
+    >
+      {initials}
+    </div>
+  );
+}
+
+function InsurerOfferCard({ insurer, adjustedPremium }) {
+  const [browserOpen, setBrowserOpen] = useState(false);
+
+  const displayPremium = insurer.premiumForCurrentDBS ?? adjustedPremium ?? insurer.tpPremium;
+
+  return (
+    <>
+      <article
+        className="surface-card overflow-hidden rounded-[24px] transition-all active:scale-[0.98]"
+        style={{ border: insurer.dbsParticipating ? '1.5px solid rgba(0,88,209,0.18)' : undefined }}
+      >
+        <button
+          id={`insurer-card-${insurer.id}`}
+          onClick={() => setBrowserOpen(true)}
+          className="flex w-full items-center gap-4 px-4 py-4 text-left"
+          aria-label={`View ${insurer.name} quote`}
+        >
+          {/* Logo */}
+          <InsurerLogoBadge
+            name={insurer.name}
+            logoUrl={insurer.logoUrl}
+            brandColor={insurer.brandColor}
+          />
+
+          {/* Info */}
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <p className="text-sm font-bold text-neutral-900">{insurer.name}</p>
+              {insurer.dbsParticipating && (
+                <span
+                  className="rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider"
+                  style={{ background: 'rgba(0,88,209,0.1)', color: '#0058D1' }}
+                >
+                  🏅 DBS Partner
+                </span>
+              )}
+            </div>
+
+            {/* Rating */}
+            <div className="mt-0.5 flex items-center gap-1">
+              <span className="text-[11px] text-amber-500">★</span>
+              <span className="text-[11px] font-semibold text-neutral-600">{insurer.rating}</span>
+              <span className="text-[11px] text-neutral-400">
+                ({insurer.reviews?.toLocaleString()})
+              </span>
+            </div>
+
+            {/* Feature chips */}
+            {insurer.features?.length > 0 && (
+              <div className="mt-1.5 flex flex-wrap gap-1">
+                {insurer.features.slice(0, 2).map((f) => (
+                  <span
+                    key={f}
+                    className="rounded-lg px-2 py-0.5 text-[9px] font-semibold text-neutral-600"
+                    style={{ background: 'rgba(0,0,0,0.05)' }}
+                  >
+                    {f}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Price + CTA */}
+          <div className="flex flex-shrink-0 flex-col items-end gap-1.5">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-neutral-400">
+              TP / yr
+            </p>
+            <p className="text-lg font-extrabold text-brand-700">
+              {formatCurrency(displayPremium)}
+            </p>
+            {insurer.discountPercent > 0 && (
+              <span
+                className="rounded-full px-2 py-0.5 text-[9px] font-bold"
+                style={{ background: 'rgba(16,185,129,0.12)', color: '#059669' }}
+              >
+                −{insurer.discountPercent}% DBS
+              </span>
+            )}
+            <span
+              className="mt-0.5 rounded-xl px-3 py-1.5 text-[11px] font-bold text-white transition-all"
+              style={{
+                background: 'linear-gradient(135deg,#273471,#0058D1 60%,#00D3FF)',
+                boxShadow: '0 4px 12px rgba(0,88,209,0.3)',
+              }}
+            >
+              Get Quote →
+            </span>
+          </div>
+        </button>
+      </article>
+
+      <InAppBrowser
+        url={insurer.quoteUrl}
+        title={`${insurer.name} — Insurance Quote`}
+        isOpen={browserOpen}
+        onClose={() => setBrowserOpen(false)}
+      />
+    </>
+  );
+}
+
+function InsurerOffersSection({ insurers, adjustedPremium }) {
+  return (
+    <section className="space-y-3">
+      {/* Header */}
+      <div
+        className="relative overflow-hidden rounded-[24px] px-5 py-4 text-white"
+        style={{
+          background: 'linear-gradient(135deg,#273471 0%,#0058D1 55%,#00D3FF 100%)',
+          boxShadow: '0 8px 30px rgba(0,88,209,0.28)',
+        }}
+      >
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -right-4 -top-4 h-24 w-24 rounded-full opacity-20"
+          style={{ background: 'rgba(255,255,255,0.4)', filter: 'blur(16px)' }}
+        />
+        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-white/70">
+          Premium Tab
+        </p>
+        <h3 className="mt-0.5 text-lg font-bold">Renewal Offers from Insurers</h3>
+        <p className="mt-1 text-[12px] leading-relaxed text-white/75">
+          Compare TP premiums from top insurers. DBS Partners offer exclusive discounts based on
+          your driving score.
+        </p>
+      </div>
+
+      {/* Cards */}
+      <div className="space-y-3">
+        {insurers.map((insurer) => (
+          <InsurerOfferCard key={insurer.id} insurer={insurer} adjustedPremium={adjustedPremium} />
+        ))}
+      </div>
+    </section>
   );
 }
 
